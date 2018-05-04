@@ -1,0 +1,49 @@
+{
+    "parser": "babel-eslint",
+    "extends": [
+      "airbnb",
+      "plugin:react/all"
+    ],
+    "plugins": [
+      "react"
+    ],
+    "env": {
+      "es6": true
+    },
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "sourceType": "module"
+    },
+    "rules": {
+      "max-len": [2, 120],
+      "indent": [2, 2, {"SwitchCase": 1}],
+      "object-curly-newline": [2, { "consistent": true }],
+      "react/sort-prop-types": 0,
+      "react/require-optimization": 0,
+      "react/no-set-state": 0,
+      "react/destructuring-assignment": 0,
+      "react/jsx-indent": [2, 2],
+      "react/jsx-indent-props": [2, 2],
+      "react/jsx-no-literals": 0,
+      "react/jsx-sort-props": 0,
+      "react/jsx-sort-default-props": 0,
+      "react/jsx-max-props-per-line": [2, { "when": "multiline" }],
+      "react/jsx-max-depth": [2, { "max": 5 }],
+      "react/jsx-one-expression-per-line": 0,
+      "react/jsx-child-element-spacing": 0,
+      "jsx-a11y/click-events-have-key-events": 0,
+      "jsx-a11y/anchor-is-valid": 0,
+      "import/extensions": 0,
+      "import/no-unresolved": 0,
+      "import/no-extraneous-dependencies": 0
+    },
+    "globals": {
+      "React": false,
+      "window": false,
+      "document": false,
+      "localStorage": false,
+      "sessionStorage": false
+    }
+  }

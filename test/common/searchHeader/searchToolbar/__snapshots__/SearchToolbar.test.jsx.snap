@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchToolbar should render successfully 1`] = `
+<div
+  className="searchToolbar"
+>
+  <SearchBySwitch
+    onSearchByChange={[MockFunction]}
+    searchBy="title"
+    searchByParams={
+      Array [
+        "title",
+        "director",
+      ]
+    }
+  />
+  <SearchButton
+    isActive={true}
+    onClickWithText={null}
+    size="large"
+    text="search"
+    type="submit"
+  />
+</div>
+`;

@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilmResult should render film result if film is available 1`] = `
+<div
+  className="result"
+>
+  <ErrorBoundary>
+    <Result
+      film={
+        Object {
+          "id": 1,
+        }
+      }
+    />
+  </ErrorBoundary>
+</div>
+`;
+
+exports[`FilmResult should render search result otherwise 1`] = `
+<div
+  className="result"
+>
+  <ErrorBoundary>
+    <SearchResult
+      onSortByChange={[MockFunction]}
+      results={
+        Array [
+          Object {
+            "id": 1,
+          },
+          Object {
+            "id": 2,
+          },
+          Object {
+            "id": 3,
+          },
+          Object {
+            "id": 4,
+          },
+          Object {
+            "id": 5,
+          },
+        ]
+      }
+      sortBy="rating"
+      sortByParams={
+        Array [
+          "release date",
+          "rating",
+        ]
+      }
+    />
+  </ErrorBoundary>
+</div>
+`;

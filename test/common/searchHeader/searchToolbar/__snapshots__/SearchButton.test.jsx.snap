@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchButton should render successfully with defaults 1`] = `
+<button
+  className="searchButton searchButton_small"
+  onClick={[Function]}
+  type="button"
+>
+  TEXT
+</button>
+`;
+
+exports[`SearchButton should render successfully with passed values 1`] = `
+<button
+  className="searchButton searchButton_large searchButton_active"
+  onClick={[Function]}
+  type="submit"
+>
+  TEXT
+</button>
+`;

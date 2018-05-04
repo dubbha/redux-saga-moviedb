@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Spinner should render successfully 1`] = `
+<div
+  className="list__message"
+>
+  <div
+    className="list__spinner"
+  />
+</div>
+`;

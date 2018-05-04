@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List should render a filtered list if passed with a film object 1`] = `
+<section
+  className="list"
+>
+  <ErrorBoundary>
+    <ListItem
+      item={
+        Object {
+          "id": 87654321,
+        }
+      }
+      key="87654321"
+      onSelectFilm={[MockFunction]}
+    />
+    <ListItem
+      item={
+        Object {
+          "id": 13572468,
+        }
+      }
+      key="13572468"
+      onSelectFilm={[MockFunction]}
+    />
+  </ErrorBoundary>
+</section>
+`;
+
+exports[`List should render a full list if not passed with a film object 1`] = `
+<section
+  className="list"
+>
+  <ErrorBoundary>
+    <ListItem
+      item={
+        Object {
+          "id": 87654321,
+        }
+      }
+      key="87654321"
+      onSelectFilm={[MockFunction]}
+    />
+    <ListItem
+      item={
+        Object {
+          "id": 13572468,
+        }
+      }
+      key="13572468"
+      onSelectFilm={[MockFunction]}
+    />
+    <ListItem
+      item={
+        Object {
+          "id": 12345678,
+        }
+      }
+      key="12345678"
+      onSelectFilm={[MockFunction]}
+    />
+  </ErrorBoundary>
+</section>
+`;
+
+exports[`List should render a spinner if is currently loading 1`] = `
+<section
+  className="list"
+>
+  <ErrorBoundary>
+    <Spinner />
+  </ErrorBoundary>
+</section>
+`;
+
+exports[`List should render an empty list notification if the list is empty 1`] = `
+<section
+  className="list"
+>
+  <ErrorBoundary>
+    <EmptyList />
+  </ErrorBoundary>
+</section>
+`;

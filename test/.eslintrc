@@ -1,0 +1,28 @@
+{
+  "extends": "../.eslintrc",
+  "rules": {
+      "global-require": 0,
+      "react/prop-types": 0,
+      "no-return-assign": 0,
+      "no-param-reassign": 0,
+      "react/destructuring-assignment": 0,
+      "function-paren-newline": 0,
+      "object-curly-newline": 0,
+      "prefer-promise-reject-errors": 0,
+      "react/jsx-one-expression-per-line": 0
+  },
+  "globals": {
+    "jest": false,
+    "describe": false,
+    "it": false,
+    "test": false,
+    "beforeEach": false,
+    "beforeAll": false,
+    "afterEach": false,
+    "afterAll": false,
+    "expect": false,
+    "xdescribe": false,
+    "xit": false,
+    "xtest": false
+  }
+}

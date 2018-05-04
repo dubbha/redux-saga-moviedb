@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Film unconnected component should not render film header and result blocks if film is not available 1`] = `
+<div
+  className="app__container"
+>
+  <List
+    film={Object {}}
+    isLoading={false}
+    onSelectFilm={[Function]}
+    results={
+      Array [
+        Object {
+          "id": 2,
+          "title": "TITLE2",
+        },
+        Object {
+          "id": 3,
+          "title": "TITLE3",
+        },
+      ]
+    }
+  />
+  <Footer />
+</div>
+`;
+
+exports[`Film unconnected component should not render result block if film is loading 1`] = `
+<div
+  className="app__container"
+>
+  <FilmHeader
+    film={
+      Object {
+        "cast": Array [
+          Object {
+            "character": "CHARACTER1",
+            "name": "NAME1",
+          },
+          Object {
+            "character": "CHARACTER2",
+            "name": "NAME2",
+          },
+        ],
+        "director": "DIRECTOR",
+        "id": 1,
+        "runtime": 120,
+        "title": "TITLE",
+      }
+    }
+    onSearchClick={[Function]}
+  />
+  <List
+    film={Object {}}
+    isLoading={true}
+    onSelectFilm={[Function]}
+    results={
+      Array [
+        Object {
+          "id": 2,
+          "title": "TITLE2",
+        },
+        Object {
+          "id": 3,
+          "title": "TITLE3",
+        },
+      ]
+    }
+  />
+  <Footer />
+</div>
+`;
+
+exports[`Film unconnected component should render successfully 1`] = `
+<div
+  className="app__container"
+>
+  <FilmHeader
+    film={
+      Object {
+        "cast": Array [
+          Object {
+            "character": "CHARACTER1",
+            "name": "NAME1",
+          },
+          Object {
+            "character": "CHARACTER2",
+            "name": "NAME2",
+          },
+        ],
+        "director": "DIRECTOR",
+        "id": 1,
+        "runtime": 120,
+        "title": "TITLE",
+      }
+    }
+    onSearchClick={[Function]}
+  />
+  <Result
+    film={
+      Object {
+        "cast": Array [
+          Object {
+            "character": "CHARACTER1",
+            "name": "NAME1",
+          },
+          Object {
+            "character": "CHARACTER2",
+            "name": "NAME2",
+          },
+        ],
+        "director": "DIRECTOR",
+        "id": 1,
+        "runtime": 120,
+        "title": "TITLE",
+      }
+    }
+    onSortByChange={null}
+    results={
+      Array [
+        Object {
+          "id": 2,
+          "title": "TITLE2",
+        },
+        Object {
+          "id": 3,
+          "title": "TITLE3",
+        },
+      ]
+    }
+    sortBy={null}
+    sortByParams={null}
+  />
+  <List
+    film={Object {}}
+    isLoading={false}
+    onSelectFilm={[Function]}
+    results={
+      Array [
+        Object {
+          "id": 2,
+          "title": "TITLE2",
+        },
+        Object {
+          "id": 3,
+          "title": "TITLE3",
+        },
+      ]
+    }
+  />
+  <Footer />
+</div>
+`;

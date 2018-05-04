@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchSortByLink should render successfully 1`] = `
+<div
+  className="searchBySwitch"
+>
+  <span
+    className="searchBySwitch__text"
+  >
+    Search By
+  </span>
+  <SearchButton
+    isActive={true}
+    key="title"
+    onClickWithText={[MockFunction]}
+    size="small"
+    text="title"
+    type="button"
+  />
+  <SearchButton
+    isActive={false}
+    key="director"
+    onClickWithText={[MockFunction]}
+    size="small"
+    text="director"
+    type="button"
+  />
+</div>
+`;
+
+exports[`SearchSortByLink should switch the active link according to the selected sort by parameter 1`] = `
+<div
+  className="searchBySwitch"
+>
+  <span
+    className="searchBySwitch__text"
+  >
+    Search By
+  </span>
+  <SearchButton
+    isActive={false}
+    key="title"
+    onClickWithText={[MockFunction]}
+    size="small"
+    text="title"
+    type="button"
+  />
+  <SearchButton
+    isActive={true}
+    key="director"
+    onClickWithText={[MockFunction]}
+    size="small"
+    text="director"
+    type="button"
+  />
+</div>
+`;

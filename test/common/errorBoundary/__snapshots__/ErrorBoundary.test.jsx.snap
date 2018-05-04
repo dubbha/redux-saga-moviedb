@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorBoudnary should render children successfully by default 1`] = `
+<div>
+  children
+</div>
+`;
+
+exports[`ErrorBoudnary should render error block when error caught 1`] = `
+<div
+  class="errorBoundary"
+>
+  <div>
+    Error [
+    <a
+      class="errorBoundary__link"
+      role="link"
+      tabindex="0"
+    >
+      details
+    </a>
+    ]
+  </div>
+  <div
+    class="errorBoundary__details errorBoundary__details_hidden"
+  >
+    <div>
+      ERROR
+    </div>
+    <div>
+      <div>
+        last
+      </div>
+      <div>
+        mid
+      </div>
+      <div>
+        first
+      </div>
+    </div>
+  </div>
+</div>
+`;

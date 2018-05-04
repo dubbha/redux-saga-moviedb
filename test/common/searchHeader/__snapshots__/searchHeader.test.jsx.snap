@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchHeader should pass the query string if available 1`] = `
+<header
+  className="search"
+>
+  <ErrorBoundary>
+    <Logo />
+    <div
+      className="search__header"
+    >
+      find your movie
+    </div>
+    <form
+      autoComplete="off"
+      onSubmit={[MockFunction]}
+    >
+      <div
+        className="search__container"
+      >
+        <input
+          className="search__input"
+          name="search"
+          onChange={[MockFunction]}
+          type="text"
+          value="QUERY"
+        />
+        <div
+          className="search__icon"
+        />
+      </div>
+      <SearchToolbar
+        onSearchByChange={[MockFunction]}
+        searchBy="director"
+        searchByParams={
+          Array [
+            "title",
+            "director",
+          ]
+        }
+      />
+    </form>
+  </ErrorBoundary>
+</header>
+`;
+
+exports[`SearchHeader should render successfully 1`] = `
+<header
+  className="search"
+>
+  <ErrorBoundary>
+    <Logo />
+    <div
+      className="search__header"
+    >
+      find your movie
+    </div>
+    <form
+      autoComplete="off"
+      onSubmit={[MockFunction]}
+    >
+      <div
+        className="search__container"
+      >
+        <input
+          className="search__input"
+          name="search"
+          onChange={[MockFunction]}
+          type="text"
+          value=""
+        />
+        <div
+          className="search__icon"
+        />
+      </div>
+      <SearchToolbar
+        onSearchByChange={[MockFunction]}
+        searchBy="director"
+        searchByParams={
+          Array [
+            "title",
+            "director",
+          ]
+        }
+      />
+    </form>
+  </ErrorBoundary>
+</header>
+`;

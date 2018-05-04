@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilmHeader should render successfully 1`] = `
+<header
+  className="film"
+>
+  <ErrorBoundary>
+    <div
+      className="film__headerContainer"
+    >
+      <Logo />
+      <FilmButton
+        onSearchClick={[MockFunction]}
+      />
+    </div>
+    <div
+      className="film__infoSection"
+    >
+      <div
+        className="film__poster"
+      >
+        <img
+          alt="TITLE"
+          className="film__image"
+          src="https://image.tmdb.org/t/p/w500/POSTER_PATH"
+        />
+      </div>
+      <div
+        className="film__details"
+      >
+        <div
+          className="film__title"
+        >
+          TITLE
+          <div
+            className="film__rating"
+          >
+            5
+          </div>
+        </div>
+        <div
+          className="film__category"
+        >
+          , , 
+        </div>
+        <div
+          className="film__year"
+        >
+          2000
+        </div>
+        <div
+          className="film__runtime"
+        >
+          120  min
+        </div>
+        <div
+          className="film__summary"
+        >
+          OVERVIEW
+        </div>
+        <div
+          className="film__director"
+        >
+          Director: DIRECTOR
+        </div>
+        <div
+          className="film__cast"
+        >
+          Cast: NAME1, NAME2, NAME3
+        </div>
+      </div>
+    </div>
+  </ErrorBoundary>
+</header>
+`;

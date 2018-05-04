@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilmResult should render successfully with director 1`] = `
+<div>
+  Films by QUENTIN TARANTINO
+</div>
+`;
+
+exports[`FilmResult should render successfully without director 1`] = `
+<div>
+  Director unknown
+</div>
+`;

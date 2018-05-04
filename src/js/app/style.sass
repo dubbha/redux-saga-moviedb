@@ -1,0 +1,12 @@
+.app                     // IE11 flexbox min-height fix
+    display: flex        // https://github.com/philipwalton/flexbugs#3-min-height-on-a-flex-container-wont-apply-to-its-flex-items
+    flex-direction: row  // https://codepen.io/chriswrightdesign/pen/emQNGZ/
+
+    &__container
+        width: 100%
+        min-height: 100vh
+        min-width: 310px
+        display: flex
+        flex-direction: column
+        flex-wrap: nowrap
+        box-sizing: border-box

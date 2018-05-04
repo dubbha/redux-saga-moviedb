@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItem should render successfully 1`] = `
+<div
+  className="list__item"
+>
+  <div
+    className="list__container"
+  >
+    <a
+      className="list__link"
+      onClick={[Function]}
+      role="link"
+      tabIndex={0}
+    >
+      <img
+        alt="TITLE"
+        className="list__image"
+        src="https://IMAGE_URL/POSTER_PATH"
+      />
+    </a>
+    <div
+      className="list__titleYearBlock"
+    >
+      <a
+        className="list__link list__title"
+        onClick={[Function]}
+        role="link"
+        tabIndex={-1}
+      >
+        TITLE
+      </a>
+      <span
+        className="list__year"
+      >
+        2000
+      </span>
+    </div>
+    <div
+      className="list__category"
+    >
+      GENRE1
+      GENRE2
+      GENRE3
+    </div>
+  </div>
+</div>
+`;

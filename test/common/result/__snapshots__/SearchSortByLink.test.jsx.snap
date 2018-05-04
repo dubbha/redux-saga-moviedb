@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchSortByLink should render active class for the active link 1`] = `
+<a
+  className="searchResult__link searchResult__link_active"
+  onClick={[Function]}
+  role="link"
+  tabIndex={0}
+>
+  TEXT
+</a>
+`;
+
+exports[`SearchSortByLink should render successfully 1`] = `
+<a
+  className="searchResult__link"
+  onClick={[Function]}
+  role="link"
+  tabIndex={0}
+>
+  TEXT
+</a>
+`;

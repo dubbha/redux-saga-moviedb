@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <g fill="none" stroke="#f55263" stroke-width="4">
+    <circle cx="50%" cy="50%" r="18" stroke-opacity="0.3"/>
+    <path d="M20,2 A18,18 0 0,1 38,20">
+      <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>
