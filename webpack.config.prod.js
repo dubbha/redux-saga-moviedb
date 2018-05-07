@@ -1,5 +1,7 @@
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const sharedConfig = require('./webpack.config.shared');
 
 module.exports = {
@@ -22,21 +24,39 @@ module.exports = {
     rules: [
       {
         test: /\.(css|sass)$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            { loader: 'css-loader', options: { sourceMap: true, minimize: true } },
-            { loader: 'postcss-loader', options: { sourceMap: true } },
-            { loader: 'sass-loader', options: { sourceMap: true } },
-          ],
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ],
+        // use: ExtractTextPlugin.extract({
+        //   fallback: 'style-loader',
+        //   use: [
+        //     { loader: 'css-loader', options: { sourceMap: true, minimize: true } },
+        //     { loader: 'postcss-loader', options: { sourceMap: true } },
+        //     { loader: 'sass-loader', options: { sourceMap: true } },
+        //   ],
+        // }),
       },
       ...sharedConfig.rules,
     ],
   },
   plugins: [
-    new ExtractTextPlugin('style.css'),
+    new MiniCssExtractPlugin({
+      filename: 'style.css',
+    }),
     ...sharedConfig.plugins,
   ],
-  devtool: 'cheap-module-source-map',
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+      }),
+      new OptimizeCSSAssetsPlugin({}),
+    ],
+  },
+  devtool: 'source-map',
 };
