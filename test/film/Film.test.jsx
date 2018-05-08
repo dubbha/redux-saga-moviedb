@@ -19,6 +19,8 @@ jest.mock('common/store/actions', () => ({
   getFilm: jest.fn(id => `film with id ${id}`),
 }));
 
+jest.spyOn(window, 'scrollTo').mockImplementation(jest.fn()); // window.scrollTo not implemented in jsdom
+
 describe('Film', () => {
   describe('react-redux connector', () => {
     it('should map state to props', () => {

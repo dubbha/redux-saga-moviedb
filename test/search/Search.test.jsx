@@ -23,6 +23,8 @@ jest.mock('common/store/actions', () => ({
   searchByDirector: jest.fn(query => `searchByDirector action for ${query}`),
 }));
 
+jest.spyOn(window, 'scrollTo').mockImplementation(jest.fn()); // window.scrollTo not implemented in jsdom
+
 describe('Search', () => {
   describe('react-redux connector', () => {
     it('should map state to props', () => {
@@ -282,8 +284,6 @@ describe('Search', () => {
     });
 
     it('should scroll to top on select film', () => {
-      jest.spyOn(window, 'scrollTo').mockImplementationOnce(jest.fn()); // window.scrollTo not implemented in jsdom
-
       const wrapper = shallow(<Search {...props} />);
 
       wrapper.find('List').simulate('selectFilm', { id: 1, title: 'TITLE' });
@@ -292,8 +292,6 @@ describe('Search', () => {
     });
 
     it('should push to history select film', () => {
-      jest.spyOn(window, 'scrollTo').mockImplementationOnce(jest.fn()); // window.scrollTo not implemented in jsdom
-
       const wrapper = shallow(<Search {...props} />);
 
       wrapper.find('List').simulate('selectFilm', { id: 1, title: 'TITLE' });

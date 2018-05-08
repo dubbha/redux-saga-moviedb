@@ -15,6 +15,7 @@ delete window.PRELOADED_STATE;
 
 const renderApp = () => {
   const renderMethod = module.hot ? render : hydrate;
+  console.log('module: ', module);
   renderMethod(
     <AppContainer>
       <Provider store={store}>
