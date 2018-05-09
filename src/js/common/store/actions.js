@@ -11,6 +11,8 @@ export const actionTypes = {
   SET_SORT_BY: 'SET_SORT_BY',
   SET_IS_LOADING: 'SET_IS_LOADING',
   SET_IS_FILM_LOADING: 'SET_IS_FILM_LOADING',
+  SEARCH_BY_DIRECTOR: 'SEARCH_BY_DIRECTOR',
+  SEARCH_BY_TITLE: 'SEARCH_BY_TITLE',
 };
 
 export const setQuery = query => ({
@@ -53,74 +55,13 @@ export const setIsFilmLoading = isFilmLoading => ({
   isFilmLoading,
 });
 
-export const searchByDirector = (query, sortBy = defaultSortBy) => (dispatch) => {
-  dispatch(setIsLoading(true));
+export const searchByDirector = () => ({
+  type: actionTypes.SEARCH_BY_DIRECTOR,
+});
 
-  return axios.get(
-    `${apiUrl}search/person`,
-    {
-      params: {
-        query,
-        api_key: apiKey,
-      },
-    },
-  ).then((res) => {
-    if (res.data && res.data.results && res.data.results.length) {
-      return axios.get(
-        `${apiUrl}person/${res.data.results[0].id}`,
-        {
-          params: {
-            append_to_response: 'movie_credits',
-            api_key: apiKey,
-          },
-        },
-      ).then((res2) => {
-        if (res2.data && res2.data.movie_credits && res2.data.movie_credits.crew) {
-          const films = res2.data.movie_credits.crew
-            .filter(i => i.job === 'Director')
-            .filter(i => !!i.title && !!i.release_date && !!i.poster_path)
-            .map(i => ({ ...i, director: query }));
-
-          dispatch(setIsLoading(false));
-          dispatch(setResults(films, sortBy));
-          return true;
-        }
-        return Promise.reject(res2);
-      });
-    }
-    return Promise.reject(res);
-  }).catch(() => {
-    dispatch(clearResults());
-    dispatch(setIsLoading(false));
-  });
-};
-
-export const searchByTitle = (query, sortBy = defaultSortBy) => (dispatch) => {
-  dispatch(setIsLoading(true));
-
-  return axios.get(
-    `${apiUrl}search/movie`,
-    {
-      params: {
-        query,
-        api_key: apiKey,
-      },
-    },
-  ).then((res) => {
-    if (res.data && res.data.results && res.data.results.length) {
-      const films = res.data.results
-        .filter(i => !!i.title && !!i.release_date && !!i.poster_path);
-
-      dispatch(setResults(films, sortBy));
-      dispatch(setIsLoading(false));
-      return true;
-    }
-    return Promise.reject(res);
-  }).catch(() => {
-    dispatch(clearResults());
-    dispatch(setIsLoading(false));
-  });
-};
+export const searchByTitle = () => ({
+  type: actionTypes.SEARCH_BY_TITLE,
+});
 
 export const getFilm = id => (dispatch) => {
   dispatch(setIsLoading(true));

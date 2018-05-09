@@ -39,7 +39,7 @@ export class Search extends Component {
     if (match.params.query) {
       const paramsQuery = decodeURIComponent(match.params.query);
       dispatch(actions.setQuery(paramsQuery));
-      return dispatch(actions.searchByDirector(paramsQuery));
+      return dispatch(actions.searchByDirector());
     }
     return Promise.resolve();
   }
@@ -60,7 +60,7 @@ export class Search extends Component {
       if (paramsQuery !== query) {
         setQuery(paramsQuery);
         if (searchBy === 'director') {
-          searchByDirector(paramsQuery, sortBy);
+          searchByDirector();
         } else {
           searchByTitle(paramsQuery, sortBy);
         }
@@ -77,7 +77,7 @@ export class Search extends Component {
 
         setQuery(nextPropsQuery);
         if (searchBy === 'director') {
-          searchByDirector(nextPropsQuery, sortBy);
+          searchByDirector();
         } else {
           searchByTitle(nextPropsQuery, sortBy);
         }
@@ -104,7 +104,7 @@ export class Search extends Component {
     if (query) {
       history.push(`/search/${encodeURIComponent(query)}`);
       if (searchBy === 'director') {
-        searchByDirector(query, sortBy);
+        searchByDirector();
       } else {
         searchByTitle(query, sortBy);
       }
