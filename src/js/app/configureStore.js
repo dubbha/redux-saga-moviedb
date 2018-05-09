@@ -3,7 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 import thunk from 'redux-thunk';
 import { devToolsEnhancer } from 'redux-devtools-extension/logOnlyInProduction';
 import rootReducer from './rootReducer';
-import initSagas from './initSagas';
+import rootSaga from '../common/store/sagas';
 
 export default (initialState = {}) => {
   const sagaMiddleware = createSagaMiddleware();
@@ -15,6 +15,6 @@ export default (initialState = {}) => {
       devToolsEnhancer(),
     ),
   );
-  initSagas(sagaMiddleware);
+  sagaMiddleware.run(rootSaga);
   return store;
 };
