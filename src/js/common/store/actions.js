@@ -11,8 +11,11 @@ export const actionTypes = {
   SET_SORT_BY: 'SET_SORT_BY',
   SET_IS_LOADING: 'SET_IS_LOADING',
   SET_IS_FILM_LOADING: 'SET_IS_FILM_LOADING',
+  SET_IS_ERROR: 'SET_IS_ERROR',
   SEARCH_BY_DIRECTOR: 'SEARCH_BY_DIRECTOR',
   SEARCH_BY_TITLE: 'SEARCH_BY_TITLE',
+  GET_FILM: 'GET_FILM',
+  GET_FILM_DETAILS: 'GET_FILM_DETAILS',
 };
 
 export const setQuery = query => ({
@@ -55,6 +58,11 @@ export const setIsFilmLoading = isFilmLoading => ({
   isFilmLoading,
 });
 
+export const setIsError = isError => ({
+  type: actionTypes.SET_IS_ERROR,
+  isError,
+});
+
 export const searchByDirector = () => ({
   type: actionTypes.SEARCH_BY_DIRECTOR,
 });
@@ -63,7 +71,21 @@ export const searchByTitle = () => ({
   type: actionTypes.SEARCH_BY_TITLE,
 });
 
-export const getFilm = id => (dispatch) => {
+export const getFilm = id => ({
+  type: actionTypes.GET_FILM,
+  id,
+});
+
+export const getFilmDetails = (film) => {
+  console.log('getFilmDetails', film);
+
+  return {
+    type: actionTypes.GET_FILM_DETAILS,
+    film,
+  };
+};
+
+export const exGetFilm = id => (dispatch) => {
   dispatch(setIsLoading(true));
 
   return axios.get(
@@ -101,13 +123,13 @@ export const getFilm = id => (dispatch) => {
         ? res.data.genres.map(i => i.id)
         : [];
 
-      dispatch(setResults(film));
+      return dispatch(setResults(film));
     }
     return Promise.reject();
   }).catch(() => dispatch(clearResults()));
 };
 
-export const getFilmDetails = film => dispatch =>
+export const exGetFilmDetails = film => dispatch =>
   axios.get(
     `${apiUrl}movie/${film.id}`,
     {

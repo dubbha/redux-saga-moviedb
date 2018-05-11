@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import EmptyList from './EmptyList';
 import ListItem from './ListItem';
 import Spinner from './Spinner';
+import Error from './Error';
 import ErrorBoundary from '../errorBoundary';
 import filmPropShape from '../utils/propShapes';
 import './style.sass';
@@ -14,11 +15,12 @@ const filtered = (list, film) => {
   return list;
 };
 
-const List = ({ results, film, onSelectFilm, isLoading }) => (
+const List = ({ results, film, onSelectFilm, isLoading, isError }) => (
   <section className="list">
     <ErrorBoundary>
       { isLoading && <Spinner /> }
-      { !isLoading && results && (
+      { isError && <Error /> }
+      { !isLoading && !isError && results && (
         results.length > 0
           ? filtered(results, film).map(item => (
             <ListItem
@@ -42,6 +44,7 @@ List.propTypes = {
   film: PropTypes.shape(filmPropShape),
   onSelectFilm: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  isError: PropTypes.bool.isRequired,
 };
 
 export default List;

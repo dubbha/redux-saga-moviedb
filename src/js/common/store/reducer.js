@@ -10,6 +10,7 @@ const initialState = {
   sortBy: defaultSortBy,
   isLoading: false,
   isFilmLoading: false,
+  isError: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -54,6 +55,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFilmLoading: action.isFilmLoading,
+      };
+    case actionTypes.SET_IS_ERROR:
+      return {
+        ...state,
+        isError: action.isError,
       };
     default:
       return state;

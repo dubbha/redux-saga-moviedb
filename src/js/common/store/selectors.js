@@ -42,6 +42,11 @@ export const isFilmLoadingSelector = createSelector(
   ({ isFilmLoading }) => isFilmLoading,
 );
 
+export const isErrorSelector = createSelector(
+  commonStateSelector,
+  ({ isError }) => isError,
+);
+
 const paramsIdSelector = (state, props) => +props.match.params.id;
 
 export const filmSelector = createSelector(

@@ -26,6 +26,7 @@ export class Search extends Component {
     searchByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
     sortByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
     isLoading: PropTypes.bool.isRequired,
+    isError: PropTypes.bool.isRequired,
     searchByTitle: PropTypes.func.isRequired,
     searchByDirector: PropTypes.func.isRequired,
     setQuery: PropTypes.func.isRequired,
@@ -33,6 +34,7 @@ export class Search extends Component {
     clearResults: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
     setSortBy: PropTypes.func.isRequired,
+    setIsError: PropTypes.func.isRequired,
   };
 
   static fetchData = (dispatch, match) => {
@@ -97,9 +99,11 @@ export class Search extends Component {
       searchByTitle,
       searchByDirector,
       clearResults,
+      setIsError,
     } = this.props;
 
     e.preventDefault(); // submitting the form to support search on enter
+    setIsError(false); // reset error if any
 
     if (query) {
       history.push(`/search/${encodeURIComponent(query)}`);
@@ -145,6 +149,7 @@ export class Search extends Component {
       searchByParams,
       sortByParams,
       isLoading,
+      isError,
     } = this.props;
 
     return (
@@ -167,6 +172,7 @@ export class Search extends Component {
           results={results}
           onSelectFilm={this.handleSelectFilm}
           isLoading={isLoading}
+          isError={isError}
         />
         <Footer />
       </div>
@@ -182,6 +188,7 @@ const mapStateToProps = state => ({
   searchByParams: selectors.searchByParamsSelector(state),
   sortByParams: selectors.sortByParamsSelector(state),
   isLoading: selectors.isLoadingSelector(state),
+  isError: selectors.isErrorSelector(state),
 });
 
 const mapDispatchToProps = {
@@ -192,6 +199,7 @@ const mapDispatchToProps = {
   clearResults: actions.clearResults,
   setSearchBy: actions.setSearchBy,
   setSortBy: actions.setSortBy,
+  setIsError: actions.setIsError,
 };
 
 export default connect(

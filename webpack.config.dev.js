@@ -3,6 +3,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const sharedConfig = require('./webpack.config.shared');
 
+// Make node env available for babel loader and other loaders
+// https://github.com/webpack/webpack/issues/2121#issuecomment-209630944
+process.env.NODE_ENV = 'development';
+
 module.exports = {
   mode: 'development',
   devServer: {

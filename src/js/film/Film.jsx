@@ -31,8 +31,10 @@ export class Film extends Component {
     getFilmDetails: PropTypes.func.isRequired,
     searchByDirector: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
+    setIsError: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     isFilmLoading: PropTypes.bool.isRequired,
+    isError: PropTypes.bool.isRequired,
   };
 
   static fetchData = (dispatch, match) =>
@@ -49,6 +51,8 @@ export class Film extends Component {
     } = this.props;
 
     const id = +params.id;
+
+    console.log('componentWillMount, film?', film);
 
     if (!film) {
       getFilm(id);
@@ -68,6 +72,8 @@ export class Film extends Component {
       const { id } = nextProps.match.params;
       const { getFilm, getFilmDetails } = this.props;
 
+      console.log('componentWillReceiveProps, film?', film);
+
       if (!film) {
         getFilm(id);
       } else if (!film.runtime || !film.cast || !film.director) {
@@ -77,14 +83,18 @@ export class Film extends Component {
   }
 
   handleSelectFilm = (film) => {
-    const { history } = this.props;
+    const { history, setIsError } = this.props;
+
+    setIsError(false);
 
     window.scrollTo(0, 0);
     history.push(`/film/${film.id}/${encodeURIComponent(film.title)}`);
   }
 
   handleSearchClick = () => {
-    const { history, setSearchBy, film } = this.props;
+    const { history, setSearchBy, setIsError, film } = this.props;
+
+    setIsError(false);
 
     window.scrollTo(0, 0);
 
@@ -97,7 +107,7 @@ export class Film extends Component {
   }
 
   render() {
-    const { isLoading, isFilmLoading, film, filteredResults } = this.props;
+    const { isLoading, isFilmLoading, isError, film, filteredResults } = this.props;
 
     return (
       <div className="app__container">
@@ -121,6 +131,7 @@ export class Film extends Component {
           results={filteredResults}
           onSelectFilm={this.handleSelectFilm}
           isLoading={isLoading || isFilmLoading}
+          isError={isError}
         />
         <Footer />
       </div>
@@ -133,6 +144,7 @@ const mapStateToProps = (state, props) => ({
   filteredResults: selectors.filteredResultsSelector(state, props),
   isLoading: selectors.isLoadingSelector(state),
   isFilmLoading: selectors.isFilmLoadingSelector(state),
+  isError: selectors.isErrorSelector(state),
 });
 
 const mapDispatchToProps = {
@@ -140,6 +152,7 @@ const mapDispatchToProps = {
   getFilmDetails: actions.getFilmDetails,
   searchByDirector: actions.searchByDirector,
   setSearchBy: actions.setSearchBy,
+  setIsError: actions.setIsError,
 };
 
 export default connect(

@@ -4,6 +4,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const sharedConfig = require('./webpack.config.shared');
 
+// Make node env available for babel loader and other loaders
+// https://github.com/webpack/webpack/issues/2121#issuecomment-209630944
+process.env.NODE_ENV = 'production';
+
 module.exports = {
   mode: 'production',
   entry: {
