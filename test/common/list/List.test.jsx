@@ -31,6 +31,7 @@ describe('List', () => {
       },
       onSelectFilm: jest.fn(),
       isLoading: false,
+      isError: false,
     };
   });
 
@@ -58,6 +59,12 @@ describe('List', () => {
 
   it('should render a spinner if is currently loading', () => {
     const wrapper = shallow(<List {...props} isLoading />);
+
+    expect(toJson(wrapper)).toMatchSnapshot();
+  });
+
+  it('should render an error message if an error orruced', () => {
+    const wrapper = shallow(<List {...props} isError />);
 
     expect(toJson(wrapper)).toMatchSnapshot();
   });

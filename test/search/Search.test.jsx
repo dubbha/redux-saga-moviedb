@@ -16,11 +16,12 @@ jest.mock('common/store/selectors', () => ({
   searchByParamsSelector: jest.fn(state => state.searchByParams),
   sortByParamsSelector: jest.fn(state => state.sortByParams),
   isLoadingSelector: jest.fn(state => state.isLoading),
+  isErrorSelector: jest.fn(state => state.isError),
 }));
 
 jest.mock('common/store/actions', () => ({
   setQuery: jest.fn(query => `setQuery action for ${query}`),
-  searchByDirector: jest.fn(query => `searchByDirector action for ${query}`),
+  searchByDirector: jest.fn(() => 'searchByDirector action'),
 }));
 
 jest.spyOn(window, 'scrollTo').mockImplementation(jest.fn()); // window.scrollTo not implemented in jsdom
@@ -42,6 +43,7 @@ describe('Search', () => {
         searchByParams: ['title', 'director'],
         sortByParams: ['release date', 'rating'],
         isLoading: false,
+        isError: false,
       };
 
       expect(mapStateToProps(state)).toEqual({
@@ -56,6 +58,7 @@ describe('Search', () => {
         searchByParams: ['title', 'director'],
         sortByParams: ['release date', 'rating'],
         isLoading: false,
+        isError: false,
       });
     });
   });
@@ -90,7 +93,9 @@ describe('Search', () => {
         clearResults: jest.fn(),
         setSearchBy: jest.fn(),
         setSortBy: jest.fn(),
+        setIsError: jest.fn(),
         isLoading: false,
+        isError: false,
       };
     });
 
@@ -114,7 +119,7 @@ describe('Search', () => {
 
       instance.componentWillMount();
 
-      expect(props.searchByDirector).toBeCalledWith('QUERY', 'rating');
+      expect(props.searchByDirector).toBeCalled();
     });
 
     it('should search by title if params query differs from stored query on mount', () => {
@@ -124,7 +129,7 @@ describe('Search', () => {
 
       instance.componentWillMount();
 
-      expect(props.searchByTitle).toBeCalledWith('QUERY', 'rating');
+      expect(props.searchByTitle).toBeCalled();
     });
 
     it('should not set query if params query is empty on mount', () => {
@@ -165,7 +170,7 @@ describe('Search', () => {
         searchByTitle: props.searchByTitle,
       });
 
-      expect(props.searchByDirector).toBeCalledWith('NEW_QUERY', 'rating');
+      expect(props.searchByDirector).toBeCalled();
     });
 
     it('should search by title if route query param changed on props change', () => {
@@ -181,7 +186,7 @@ describe('Search', () => {
         searchByTitle: props.searchByTitle,
       });
 
-      expect(props.searchByTitle).toBeCalledWith('NEW_QUERY', 'rating');
+      expect(props.searchByTitle).toBeCalled();
     });
 
     it('should set query if query changed to empty string on props change', () => {
@@ -245,7 +250,7 @@ describe('Search', () => {
 
       wrapper.find('SearchHeader').simulate('search', event);
 
-      expect(props.searchByDirector).toBeCalledWith('QUERY', props.sortBy);
+      expect(props.searchByDirector).toBeCalled();
     });
 
     it('should search by title on handle search', () => {
@@ -254,7 +259,7 @@ describe('Search', () => {
 
       wrapper.find('SearchHeader').simulate('search', event);
 
-      expect(props.searchByTitle).toBeCalledWith('QUERY', props.sortBy);
+      expect(props.searchByTitle).toBeCalled();
     });
 
     it('should push to history if query is empty on handle search', () => {
@@ -346,7 +351,7 @@ describe('Search', () => {
     it('should search by director on server-side rendering', () => {
       Search.fetchData(dispatch, match);
 
-      expect(dispatch).toBeCalledWith('searchByDirector action for QUERY');
+      expect(dispatch).toBeCalledWith('searchByDirector action');
     });
 
     it('should not dispatch if query is empty on server-side rendering', () => {

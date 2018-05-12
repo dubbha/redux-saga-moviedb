@@ -51,7 +51,6 @@ export class Search extends Component {
       match: { params },
       query,
       searchBy,
-      sortBy,
       searchByTitle,
       searchByDirector,
       setQuery,
@@ -64,7 +63,7 @@ export class Search extends Component {
         if (searchBy === 'director') {
           searchByDirector();
         } else {
-          searchByTitle(paramsQuery, sortBy);
+          searchByTitle();
         }
       }
     }
@@ -72,7 +71,7 @@ export class Search extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.query !== this.props.match.params.query) {
-      const { searchBy, sortBy, setQuery, clearResults, searchByDirector, searchByTitle } = nextProps;
+      const { searchBy, setQuery, clearResults, searchByDirector, searchByTitle } = nextProps;
 
       if (nextProps.match.params.query) {
         const nextPropsQuery = decodeURIComponent(nextProps.match.params.query);
@@ -81,7 +80,7 @@ export class Search extends Component {
         if (searchBy === 'director') {
           searchByDirector();
         } else {
-          searchByTitle(nextPropsQuery, sortBy);
+          searchByTitle();
         }
       } else {
         setQuery('');
@@ -95,7 +94,6 @@ export class Search extends Component {
       history,
       query,
       searchBy,
-      sortBy,
       searchByTitle,
       searchByDirector,
       clearResults,
@@ -110,7 +108,7 @@ export class Search extends Component {
       if (searchBy === 'director') {
         searchByDirector();
       } else {
-        searchByTitle(query, sortBy);
+        searchByTitle();
       }
     } else {
       history.push('/search');

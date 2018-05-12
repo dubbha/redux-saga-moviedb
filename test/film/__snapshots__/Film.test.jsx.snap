@@ -6,6 +6,7 @@ exports[`Film unconnected component should not render film header and result blo
 >
   <List
     film={Object {}}
+    isError={false}
     isLoading={false}
     onSelectFilm={[Function]}
     results={
@@ -52,6 +53,7 @@ exports[`Film unconnected component should not render result block if film is lo
   />
   <List
     film={Object {}}
+    isError={false}
     isLoading={true}
     onSelectFilm={[Function]}
     results={
@@ -133,6 +135,7 @@ exports[`Film unconnected component should render successfully 1`] = `
   />
   <List
     film={Object {}}
+    isError={false}
     isLoading={false}
     onSelectFilm={[Function]}
     results={

@@ -46,6 +46,7 @@ exports[`Search unconnected component should render successfully 1`] = `
   />
   <List
     film={Object {}}
+    isError={false}
     isLoading={false}
     onSelectFilm={[Function]}
     results={

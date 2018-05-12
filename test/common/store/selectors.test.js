@@ -15,6 +15,7 @@ describe('selectors', () => {
       sortByParams: ['release date', 'rating'],
       isLoading: false,
       isFilmLoading: true,
+      isError: false,
     },
   };
 
@@ -69,6 +70,12 @@ describe('selectors', () => {
   describe('isFilmLoadingSelector', () => {
     it('should select isFilmLoading flag', () => {
       expect(sut.isFilmLoadingSelector(state)).toBe(true);
+    });
+  });
+
+  describe('isErrorSelector', () => {
+    it('should select isError flag', () => {
+      expect(sut.isErrorSelector(state)).toBe(false);
     });
   });
 

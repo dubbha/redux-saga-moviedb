@@ -52,8 +52,6 @@ export class Film extends Component {
 
     const id = +params.id;
 
-    console.log('componentWillMount, film?', film);
-
     if (!film) {
       getFilm(id);
     } else {
@@ -71,8 +69,6 @@ export class Film extends Component {
       const { film } = nextProps;
       const { id } = nextProps.match.params;
       const { getFilm, getFilmDetails } = this.props;
-
-      console.log('componentWillReceiveProps, film?', film);
 
       if (!film) {
         getFilm(id);

@@ -133,15 +133,13 @@ export function* getFilmSaga(action) {
         directorObj = res.data.credits.crew.find(i => i.job === 'Director');
       }
 
-      console.log('directorObj', directorObj);
-
       if (directorObj && directorObj.name) {
         const director = directorObj.name;
 
         yield put(setQuery(director));
-        const a = yield put.resolve(searchByDirector());
-        console.log(a);
-        yield put(setResultDetails(id, { runtime, cast, director }));
+        yield put(searchByDirector());
+        yield take(actionTypes.SET_RESULTS);
+        yield put(setResultDetails(film.id, { runtime, cast, director }));
 
         return;
       }
@@ -152,6 +150,8 @@ export function* getFilmSaga(action) {
         : [];
 
       yield put(setResults(film));
+    } else {
+      yield put(clearResults());
     }
   } catch (e) {
     yield put(clearResults());
@@ -159,8 +159,6 @@ export function* getFilmSaga(action) {
 }
 
 export function* getFilmDetailsSaga(action) {
-  console.log('getFilmDetailsSaga', action);
-
   const { film } = action;
 
   const res = yield call(
@@ -190,7 +188,6 @@ export function* getFilmDetailsSaga(action) {
         yield put(setQuery(director));
         yield put(searchByDirector());
         yield take(actionTypes.SET_RESULTS);
-        console.log('taken');
         yield put(setResultDetails(film.id, { runtime, cast, director }));
 
         return;

@@ -13,6 +13,7 @@ jest.mock('common/store/selectors', () => ({
   filteredResultsSelector: jest.fn((state, props) => state.results.filter(i => i.id !== +props.match.params.id)),
   isLoadingSelector: jest.fn(state => state.isLoading),
   isFilmLoadingSelector: jest.fn(state => state.isFilmLoading),
+  isErrorSelector: jest.fn(state => state.isError),
 }));
 
 jest.mock('common/store/actions', () => ({
@@ -78,8 +79,10 @@ describe('Film', () => {
         getFilmDetails: jest.fn(),
         searchByDirector: jest.fn(),
         setSearchBy: jest.fn(),
+        setIsError: jest.fn(),
         isLoading: false,
         isFilmLoading: false,
+        isError: false,
       };
     });
 

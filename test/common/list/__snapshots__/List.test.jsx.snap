@@ -82,3 +82,13 @@ exports[`List should render an empty list notification if the list is empty 1`] 
   </ErrorBoundary>
 </section>
 `;
+
+exports[`List should render an error message if an error orruced 1`] = `
+<section
+  className="list"
+>
+  <ErrorBoundary>
+    <Error />
+  </ErrorBoundary>
+</section>
+`;

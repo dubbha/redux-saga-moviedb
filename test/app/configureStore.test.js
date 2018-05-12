@@ -7,7 +7,7 @@ jest.mock('redux', () => ({
   compose: jest.fn(),
 }));
 
-jest.mock('redux-thunk', () => jest.fn(() => 'thunk'));
+jest.mock('redux-saga', () => () => ({ run: jest.fn() }));
 
 jest.mock('redux-devtools-extension/logOnlyInProduction', () => ({
   devToolsEnhancer: jest.fn(),

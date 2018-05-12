@@ -1,6 +1,5 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import thunk from 'redux-thunk';
 import { devToolsEnhancer } from 'redux-devtools-extension/logOnlyInProduction';
 import rootReducer from './rootReducer';
 import rootSaga from '../common/store/sagas';
@@ -11,7 +10,7 @@ export default (initialState = {}) => {
     rootReducer,
     initialState,
     compose(
-      applyMiddleware(sagaMiddleware, thunk),
+      applyMiddleware(sagaMiddleware),
       devToolsEnhancer(),
     ),
   );

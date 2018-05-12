@@ -14,6 +14,7 @@ describe('reducer', () => {
       sortBy: defaultSortBy,
       isLoading: false,
       isFilmLoading: false,
+      isError: false,
     });
   });
 
@@ -115,5 +116,16 @@ describe('reducer', () => {
     };
 
     expect(reducer(state, action)).toEqual({ isFilmLoading: true });
+  });
+
+  it('should set isError flag', () => {
+    const state = { isError: false };
+
+    const action = {
+      type: actionTypes.SET_IS_ERROR,
+      isError: true,
+    };
+
+    expect(reducer(state, action)).toEqual({ isError: true });
   });
 });

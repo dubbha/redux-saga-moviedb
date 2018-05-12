@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { defaultSortBy, sortFnFabric } from './store.config';
-import { apiUrl, apiKey } from '../config/api.config';
 
 export const actionTypes = {
   SET_QUERY: 'SET_QUERY',
@@ -76,91 +74,7 @@ export const getFilm = id => ({
   id,
 });
 
-export const getFilmDetails = (film) => {
-  console.log('getFilmDetails', film);
-
-  return {
-    type: actionTypes.GET_FILM_DETAILS,
-    film,
-  };
-};
-
-export const exGetFilm = id => (dispatch) => {
-  dispatch(setIsLoading(true));
-
-  return axios.get(
-    `${apiUrl}movie/${id}`,
-    {
-      params: {
-        api_key: apiKey,
-        append_to_response: 'credits',
-      },
-    },
-  ).then((res) => {
-    dispatch(setIsLoading(false)); // film is ready to be displayed without extra details
-
-    if (res.data) {
-      const film = res.data;
-
-      const { runtime } = res.data;
-      const cast = (res.data.credits && res.data.credits.cast) || [];
-
-      let directorObj;
-      if (res.data.credits && res.data.credits.crew) {
-        directorObj = res.data.credits.crew.find(i => i.job === 'Director');
-      }
-
-      if (directorObj && directorObj.name) {
-        const director = directorObj.name;
-        return searchByDirector(director)(dispatch)
-          .then(() => {
-            dispatch(setResultDetails(id, { runtime, cast, director }));
-          });
-      }
-      // no director to search by, this film is the only film in the list
-      film.cast = cast;
-      film.genre_ids = res.data.genres && res.data.genres.length
-        ? res.data.genres.map(i => i.id)
-        : [];
-
-      return dispatch(setResults(film));
-    }
-    return Promise.reject();
-  }).catch(() => dispatch(clearResults()));
-};
-
-export const exGetFilmDetails = film => dispatch =>
-  axios.get(
-    `${apiUrl}movie/${film.id}`,
-    {
-      params: {
-        api_key: apiKey,
-        append_to_response: 'credits',
-      },
-    },
-  ).then((res) => {
-    if (res.data) {
-      const { runtime } = res.data;
-      const cast = (res.data.credits && res.data.credits.cast) || [];
-
-      if (!film.director) {
-        let directorObj;
-        if (res.data.credits && res.data.credits.crew) {
-          directorObj = res.data.credits.crew.find(i => i.job === 'Director');
-        }
-
-        if (directorObj && directorObj.name) { // some movies have no director
-          const director = directorObj.name;
-
-          return searchByDirector(director)(dispatch)
-            .then(() => {
-              dispatch(setResultDetails(film.id, { runtime, cast, director }));
-            });
-        }
-        dispatch(setResultDetails(film.id, { runtime, cast }));
-      } else {
-        dispatch(setResultDetails(film.id, { runtime, cast }));
-      }
-    }
-    return true;
-  }).catch(() => {}); // catch silently
+export const getFilmDetails = film => ({
+  type: actionTypes.GET_FILM_DETAILS,
+  film,
+});

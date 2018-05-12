@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { call, put, select, takeLatest, all } from 'redux-saga/effects';
+import { call, put, select, take, takeLatest, all } from 'redux-saga/effects';
 import * as sut from 'common/store/sagas';
 import * as actions from 'common/store/actions';
 import * as selectors from 'common/store/selectors';
 import { apiUrl, apiKey } from 'common/config/api.config';
 
 describe('sagas', () => {
-  describe('searchByDirector saga', () => {
+  describe('searchByDirectorSaga', () => {
     describe('happy path', () => {
-      const gen = sut.searchByDirector();
+      const gen = sut.searchByDirectorSaga();
 
       it('should set isLoading to true', () => {
         expect(gen.next().value).toEqual(put(actions.setIsLoading(true)));
@@ -84,7 +84,7 @@ describe('sagas', () => {
     });
 
     describe('empty person query result', () => {
-      const gen = sut.searchByDirector();
+      const gen = sut.searchByDirectorSaga();
       gen.next();
       gen.next();
       gen.next();
@@ -103,7 +103,7 @@ describe('sagas', () => {
     });
 
     describe('empty crew in movie credits query result', () => {
-      const gen = sut.searchByDirector();
+      const gen = sut.searchByDirectorSaga();
       gen.next();
       gen.next();
       gen.next();
@@ -127,11 +127,28 @@ describe('sagas', () => {
         expect(gen.next().value).toEqual(put(actions.setIsLoading(false)));
       });
     });
+
+    describe('error handling', () => {
+      const gen = sut.searchByDirectorSaga();
+      gen.next();
+
+      it('should clear results on error thrown', () => {
+        expect(gen.throw('error').value).toEqual(put(actions.clearResults()));
+      });
+
+      it('should reset isLoading to false', () => {
+        expect(gen.next().value).toEqual(put(actions.setIsLoading(false)));
+      });
+
+      it('should set isError to true', () => {
+        expect(gen.next().value).toEqual(put(actions.setIsError(true)));
+      });
+    });
   });
 
-  describe('searchByTitle saga', () => {
+  describe('searchByTitleSaga', () => {
     describe('happy path', () => {
-      const gen = sut.searchByTitle();
+      const gen = sut.searchByTitleSaga();
 
       it('should set isLoading to true', () => {
         expect(gen.next().value).toEqual(put(actions.setIsLoading(true)));
@@ -184,7 +201,7 @@ describe('sagas', () => {
     });
 
     describe('empty movies query result', () => {
-      const gen = sut.searchByTitle();
+      const gen = sut.searchByTitleSaga();
       gen.next();
       gen.next();
       gen.next();
@@ -201,19 +218,337 @@ describe('sagas', () => {
         expect(gen.next().value).toEqual(put(actions.setIsLoading(false)));
       });
     });
+
+    describe('error handling', () => {
+      const gen = sut.searchByTitleSaga();
+      gen.next();
+
+      it('should clear results on error thrown', () => {
+        expect(gen.throw('error').value).toEqual(put(actions.clearResults()));
+      });
+
+      it('should reset isLoading to false', () => {
+        expect(gen.next().value).toEqual(put(actions.setIsLoading(false)));
+      });
+
+      it('should set isError to true', () => {
+        expect(gen.next().value).toEqual(put(actions.setIsError(true)));
+      });
+    });
+  });
+
+  describe('getFilmSaga', () => {
+    describe('happy path', () => {
+      const gen = sut.getFilmSaga({ id: 123 });
+
+      it('should set isLoading to true', () => {
+        expect(gen.next().value).toEqual(put(actions.setIsLoading(true)));
+      });
+
+      it('should call API for movie', () => {
+        expect(gen.next().value).toEqual(call(
+          axios.get,
+          `${apiUrl}movie/123`,
+          {
+            params: {
+              api_key: apiKey,
+              append_to_response: 'credits',
+            },
+          },
+        ));
+      });
+
+      it('should set isLoading to false', () => {
+        expect(gen.next({
+          data: {
+            id: 123,
+            runtime: 120,
+            credits: {
+              cast: ['Actor1', 'Actor2', 'Actor3'],
+              crew: [
+                { job: 'Actor', name: 'Johnny Depp' },
+                { job: 'Director', name: 'Woody Allen' },
+              ],
+            },
+          },
+        }).value).toEqual(put(actions.setIsLoading(false)));
+      });
+
+      it('should set query to director name', () => {
+        expect(gen.next().value).toEqual(put(actions.setQuery('Woody Allen')));
+      });
+
+      it('should search by director', () => {
+        expect(gen.next().value).toEqual(put(actions.searchByDirector()));
+      });
+
+      it('should wait for setResults action', () => {
+        expect(gen.next().value).toEqual(take(actions.actionTypes.SET_RESULTS));
+      });
+
+      it('should set retult details with runtime, cast and director', () => {
+        expect(gen.next().value).toEqual(put(actions.setResultDetails(123, {
+          runtime: 120,
+          cast: ['Actor1', 'Actor2', 'Actor3'],
+          director: 'Woody Allen',
+        })));
+      });
+
+      it('should stop the happy path', () => {
+        expect(gen.next()).toEqual({ value: undefined, done: true });
+      });
+    });
+
+    describe('no director to search by', () => {
+      const gen = sut.getFilmSaga({ id: 123 });
+      gen.next();
+      gen.next();
+      gen.next({
+        data: {
+          id: 123,
+          runtime: 120,
+          credits: {
+            cast: ['Actor1', 'Actor2', 'Actor3'],
+            crew: [
+              { job: 'Actor', name: 'Johnny Depp' },
+            ],
+          },
+          genres: [
+            { id: 1, name: 'Drama' },
+          ],
+        },
+      });
+
+      expect(gen.next().value).toMatchObject(put(actions.setResults({
+        id: 123,
+        runtime: 120,
+        cast: ['Actor1', 'Actor2', 'Actor3'],
+        genre_ids: [1],
+      })));
+    });
+
+    describe('empty response to movie request', () => {
+      const gen = sut.getFilmSaga({ id: 123 });
+      gen.next();
+      gen.next();
+      gen.next({});
+      expect(gen.next().value).toEqual(put(actions.clearResults()));
+    });
+
+    describe('no cast, crew or genres in response to movie request', () => {
+      const gen = sut.getFilmSaga({ id: 123 });
+      gen.next();
+      gen.next();
+      gen.next({
+        data: {
+          id: 123,
+          runtime: 120,
+          credits: {},
+        },
+      });
+
+      it('should set cast and genre ids to empty arrays', () => {
+        expect(gen.next().value).toMatchObject(put(actions.setResults({
+          id: 123,
+          runtime: 120,
+          cast: [],
+          genre_ids: [],
+        })));
+      });
+    });
+
+    describe('error handling', () => {
+      const gen = sut.getFilmSaga({ id: 123 });
+      gen.next();
+
+      it('should clear results on error thrown', () => {
+        expect(gen.throw('error').value).toEqual(put(actions.clearResults()));
+      });
+    });
+  });
+
+  describe('getFilmDetailsSaga', () => {
+    describe('no director passed in film object', () => {
+      describe('no director received from server also', () => {
+        const gen = sut.getFilmDetailsSaga({ film: { id: 123 } });
+
+        it('should call API for movie', () => {
+          expect(gen.next().value).toEqual(call(
+            axios.get,
+            `${apiUrl}movie/123`,
+            {
+              params: {
+                api_key: apiKey,
+                append_to_response: 'credits',
+              },
+            },
+          ));
+        });
+
+        it('should set result details to runtime and cast', () => {
+          expect(gen.next({
+            data: {
+              id: 123,
+              runtime: 120,
+              credits: {
+                cast: ['Actor1', 'Actor2', 'Actor3'],
+                crew: [
+                  { job: 'Actor', name: 'Johnny Depp' },
+                ],
+              },
+            },
+          }).value).toEqual(put(actions.setResultDetails(123, { runtime: 120, cast: ['Actor1', 'Actor2', 'Actor3'] })));
+        });
+      });
+
+      describe('no cast or crew in the server also', () => {
+        const gen = sut.getFilmDetailsSaga({ film: { id: 123 } });
+
+        it('should call API for movie', () => {
+          expect(gen.next().value).toEqual(call(
+            axios.get,
+            `${apiUrl}movie/123`,
+            {
+              params: {
+                api_key: apiKey,
+                append_to_response: 'credits',
+              },
+            },
+          ));
+        });
+
+        it('should set cast to empty array', () => {
+          expect(gen.next({
+            data: {
+              id: 123,
+              runtime: 120,
+              credits: {},
+            },
+          }).value).toEqual(put(actions.setResultDetails(123, { runtime: 120, cast: [] })));
+        });
+      });
+
+      describe('director received from server', () => {
+        const gen = sut.getFilmDetailsSaga({ film: { id: 123 } });
+
+        it('should call API for movie', () => {
+          expect(gen.next().value).toEqual(call(
+            axios.get,
+            `${apiUrl}movie/123`,
+            {
+              params: {
+                api_key: apiKey,
+                append_to_response: 'credits',
+              },
+            },
+          ));
+        });
+
+        it('should set query to director name', () => {
+          expect(gen.next({
+            data: {
+              id: 123,
+              runtime: 120,
+              credits: {
+                cast: ['Actor1', 'Actor2', 'Actor3'],
+                crew: [
+                  { job: 'Actor', name: 'Johnny Depp' },
+                  { job: 'Director', name: 'Woody Allen' },
+                ],
+              },
+            },
+          }).value).toEqual(put(actions.setQuery('Woody Allen')));
+        });
+
+        it('should search by director', () => {
+          expect(gen.next().value).toEqual(put(actions.searchByDirector()));
+        });
+
+        it('should wait for setResults action', () => {
+          expect(gen.next().value).toEqual(take(actions.actionTypes.SET_RESULTS));
+        });
+
+        it('should set retult details with runtime, cast and director', () => {
+          expect(gen.next().value).toEqual(put(actions.setResultDetails(123, {
+            runtime: 120,
+            cast: ['Actor1', 'Actor2', 'Actor3'],
+            director: 'Woody Allen',
+          })));
+        });
+
+        it('should stop', () => {
+          expect(gen.next()).toEqual({ value: undefined, done: true });
+        });
+      });
+
+      describe('no server response', () => {
+        const gen = sut.getFilmDetailsSaga({ film: { id: 123 } });
+        gen.next();
+
+        it('should stop silently', () => {
+          expect(gen.next({})).toEqual({ value: undefined, done: true });
+        });
+      });
+    });
+
+    describe('director passed in film object', () => {
+      const gen = sut.getFilmDetailsSaga({ film: { id: 123, director: 'Quentin Tarantino' } });
+
+      it('should call API for movie', () => {
+        expect(gen.next().value).toEqual(call(
+          axios.get,
+          `${apiUrl}movie/123`,
+          {
+            params: {
+              api_key: apiKey,
+              append_to_response: 'credits',
+            },
+          },
+        ));
+      });
+
+      it('should set result details to runtime and cast', () => {
+        expect(gen.next({
+          data: {
+            id: 123,
+            runtime: 120,
+            credits: {
+              cast: ['Actor1', 'Actor2', 'Actor3'],
+              crew: [
+                { job: 'Actor', name: 'Johnny Depp' },
+              ],
+            },
+          },
+        }).value).toEqual(put(actions.setResultDetails(123, { runtime: 120, cast: ['Actor1', 'Actor2', 'Actor3'] })));
+      });
+    });
   });
 
   describe('watchSearchByDirector saga', () => {
     it('should run a search by director saga on the latest corresponding action', () => {
       const gen = sut.watchSearchByDirector();
-      expect(gen.next().value).toEqual(takeLatest(actions.actionTypes.SEARCH_BY_DIRECTOR, sut.searchByDirector));
+      expect(gen.next().value).toEqual(takeLatest(actions.actionTypes.SEARCH_BY_DIRECTOR, sut.searchByDirectorSaga));
     });
   });
 
   describe('watchSearchByTitle saga', () => {
     it('should run a search by title saga on the latest corresponding action', () => {
       const gen = sut.watchSearchByTitle();
-      expect(gen.next().value).toEqual(takeLatest(actions.actionTypes.SEARCH_BY_TITLE, sut.searchByTitle));
+      expect(gen.next().value).toEqual(takeLatest(actions.actionTypes.SEARCH_BY_TITLE, sut.searchByTitleSaga));
+    });
+  });
+
+  describe('watchGetFilm saga', () => {
+    it('should run a get film saga on the latest corresponding action', () => {
+      const gen = sut.watchGetFilm();
+      expect(gen.next().value).toEqual(takeLatest(actions.actionTypes.GET_FILM, sut.getFilmSaga));
+    });
+  });
+
+  describe('watchGetFilmDetails saga', () => {
+    it('should run a get film details saga on the latest corresponding action', () => {
+      const gen = sut.watchGetFilmDetails();
+      expect(gen.next().value).toEqual(takeLatest(actions.actionTypes.GET_FILM_DETAILS, sut.getFilmDetailsSaga));
     });
   });
 
@@ -223,6 +558,8 @@ describe('sagas', () => {
       expect(gen.next().value).toEqual(all([
         sut.watchSearchByDirector(),
         sut.watchSearchByTitle(),
+        sut.watchGetFilm(),
+        sut.watchGetFilmDetails(),
       ]));
     });
   });
