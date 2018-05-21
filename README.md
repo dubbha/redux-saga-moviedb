@@ -86,5 +86,6 @@ Ran all test suites.
 Things to try
 - [x] redux-saga client-side
 - [ ] redux-saga based SSR
+- [ ] v16.3 lifecycle hooks
 - [ ] styled-components
 - [ ] lazy loading
