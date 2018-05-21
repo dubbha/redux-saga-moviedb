@@ -82,3 +82,9 @@ Snapshots:   36 passed, 36 total
 Time:        6.574s
 Ran all test suites.
 ```
+
+Things to try
+- [x] redux-saga client-side
+- [ ] redux-saga based SSR
+- [ ] styled-components
+- [ ] lazy loading
