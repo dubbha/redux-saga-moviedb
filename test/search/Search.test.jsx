@@ -108,7 +108,7 @@ describe('Search', () => {
       props.query = '';
       const instance = new Search(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.setQuery).toBeCalledWith('QUERY');
     });
@@ -117,7 +117,7 @@ describe('Search', () => {
       props.query = '';
       const instance = new Search(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.searchByDirector).toBeCalled();
     });
@@ -127,7 +127,7 @@ describe('Search', () => {
       props.searchBy = 'title';
       const instance = new Search(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.searchByTitle).toBeCalled();
     });
@@ -136,15 +136,13 @@ describe('Search', () => {
       props.match.params.query = '';
       const instance = new Search(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.setQuery).not.toBeCalled();
     });
 
     it('should set query if route query param changed on props change', () => {
-      const instance = new Search(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Search({
         match: { params: { query: 'NEW_QUERY' } },
         searchBy: props.searchBy,
         sortBy: props.sortBy,
@@ -153,14 +151,14 @@ describe('Search', () => {
         searchByDirector: props.searchByDirector,
         searchByTitle: props.searchByTitle,
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.setQuery).toBeCalledWith('NEW_QUERY');
     });
 
     it('should search by director if route query param changed on props change', () => {
-      const instance = new Search(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Search({
         match: { params: { query: 'NEW_QUERY' } },
         searchBy: props.searchBy,
         sortBy: props.sortBy,
@@ -170,13 +168,13 @@ describe('Search', () => {
         searchByTitle: props.searchByTitle,
       });
 
+      instance.componentDidUpdate(props);
+
       expect(props.searchByDirector).toBeCalled();
     });
 
     it('should search by title if route query param changed on props change', () => {
-      const instance = new Search(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Search({
         match: { params: { query: 'NEW_QUERY' } },
         searchBy: 'title',
         sortBy: props.sortBy,
@@ -186,13 +184,13 @@ describe('Search', () => {
         searchByTitle: props.searchByTitle,
       });
 
+      instance.componentDidUpdate(props);
+
       expect(props.searchByTitle).toBeCalled();
     });
 
     it('should set query if query changed to empty string on props change', () => {
-      const instance = new Search(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Search({
         match: { params: { query: '' } },
         searchBy: props.searchBy,
         sortBy: props.sortBy,
@@ -201,14 +199,14 @@ describe('Search', () => {
         searchByDirector: props.searchByDirector,
         searchByTitle: props.searchByTitle,
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.setQuery).toBeCalledWith('');
     });
 
     it('should clear results if query changed to empty string on props change', () => {
-      const instance = new Search(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Search({
         match: { params: { query: '' } },
         searchBy: props.searchBy,
         sortBy: props.sortBy,
@@ -218,13 +216,13 @@ describe('Search', () => {
         searchByTitle: props.searchByTitle,
       });
 
+      instance.componentDidUpdate(props);
+
       expect(props.clearResults).toBeCalled();
     });
 
     it('should not set query if query has not changed on props change', () => {
-      const instance = new Search(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Search({
         match: { params: { query: 'QUERY' } },
         searchBy: props.searchBy,
         sortBy: props.sortBy,
@@ -233,6 +231,8 @@ describe('Search', () => {
         searchByDirector: props.searchByDirector,
         searchByTitle: props.searchByTitle,
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.setQuery).not.toBeCalled();
     });

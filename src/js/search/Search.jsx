@@ -46,7 +46,7 @@ export class Search extends Component {
     return Promise.resolve();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const {
       match: { params },
       query,
@@ -69,12 +69,12 @@ export class Search extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.query !== this.props.match.params.query) {
-      const { searchBy, setQuery, clearResults, searchByDirector, searchByTitle } = nextProps;
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.query !== prevProps.match.params.query) {
+      const { searchBy, setQuery, clearResults, searchByDirector, searchByTitle } = this.props;
 
-      if (nextProps.match.params.query) {
-        const nextPropsQuery = decodeURIComponent(nextProps.match.params.query);
+      if (this.props.match.params.query) {
+        const nextPropsQuery = decodeURIComponent(this.props.match.params.query);
 
         setQuery(nextPropsQuery);
         if (searchBy === 'director') {

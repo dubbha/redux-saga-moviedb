@@ -1,5 +1,13 @@
 ### Redux Saga MovieDB app
 
+- [x] Redux-Saga client-side
+- [ ] Redux-Saga based SSR
+- [x] SafeMode
+- [x] React v16.3 safe lifecycle hooks
+- [x] ErrorBoundaries
+- [ ] styled-components
+- [ ] Lazy Loading
+
 Run development server
 ```
 npm run dev
@@ -82,10 +90,3 @@ Snapshots:   36 passed, 36 total
 Time:        6.574s
 Ran all test suites.
 ```
-
-Things to try
-- [x] redux-saga client-side
-- [ ] redux-saga based SSR
-- [ ] v16.3 lifecycle hooks
-- [ ] styled-components
-- [ ] lazy loading

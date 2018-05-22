@@ -105,7 +105,7 @@ describe('Film', () => {
       props.film = null;
       const instance = new Film(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.getFilm).toBeCalled();
     });
@@ -114,7 +114,7 @@ describe('Film', () => {
       props.film.runtime = null;
       const instance = new Film(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.getFilmDetails).toBeCalled();
     });
@@ -123,7 +123,7 @@ describe('Film', () => {
       props.film.cast = null;
       const instance = new Film(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.getFilmDetails).toBeCalled();
     });
@@ -132,7 +132,7 @@ describe('Film', () => {
       props.film.director = null;
       const instance = new Film(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.getFilmDetails).toBeCalled();
     });
@@ -142,26 +142,24 @@ describe('Film', () => {
       props.filteredResults = [];
       const instance = new Film(props);
 
-      instance.componentWillMount();
+      instance.componentDidMount();
 
       expect(props.searchByDirector).toBeCalled();
     });
 
     it('should get film if route id param changed but film is not available on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '2', title: 'TITLE2' } },
         film: null,
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.getFilm).toBeCalled();
     });
 
     it('should get film details if route id param changed but film runtime is not available on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -173,14 +171,14 @@ describe('Film', () => {
           ],
         },
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.getFilmDetails).toBeCalled();
     });
 
     it('should get film details if route id param changed but film cast is not available on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -190,13 +188,13 @@ describe('Film', () => {
         },
       });
 
+      instance.componentDidUpdate(props);
+
       expect(props.getFilmDetails).toBeCalled();
     });
 
     it('should get film details if route id param changed but film director is not available on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -209,24 +207,24 @@ describe('Film', () => {
         },
       });
 
+      instance.componentDidUpdate(props);
+
       expect(props.getFilmDetails).toBeCalled();
     });
 
     it('should not get film if route id param has not changed on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '1', title: 'TITLE' } },
         film: null,
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.getFilm).not.toBeCalled();
     });
 
     it('should not get film details if route id param has not changed on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '1', title: 'TITLE' } },
         film: {
           id: 1,
@@ -234,13 +232,13 @@ describe('Film', () => {
         },
       });
 
+      instance.componentDidUpdate(props);
+
       expect(props.getFilmDetails).not.toBeCalled();
     });
 
     it('should not get film details if route id param changed but film details are available on props change', () => {
-      const instance = new Film(props);
-
-      instance.componentWillReceiveProps({
+      const instance = new Film({
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -253,6 +251,8 @@ describe('Film', () => {
           director: 'DIRECTOR',
         },
       });
+
+      instance.componentDidUpdate(props);
 
       expect(props.getFilmDetails).not.toBeCalled();
     });

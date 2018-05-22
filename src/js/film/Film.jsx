@@ -40,7 +40,7 @@ export class Film extends Component {
   static fetchData = (dispatch, match) =>
     dispatch(actions.getFilm(match.params.id));
 
-  componentWillMount = () => {
+  componentDidMount() {
     const {
       match: { params },
       film,
@@ -64,11 +64,11 @@ export class Film extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.id !== this.props.match.params.id) {
-      const { film } = nextProps;
-      const { id } = nextProps.match.params;
-      const { getFilm, getFilmDetails } = this.props;
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      const { film } = this.props;
+      const { id } = this.props.match.params;
+      const { getFilm, getFilmDetails } = prevProps;
 
       if (!film) {
         getFilm(id);
