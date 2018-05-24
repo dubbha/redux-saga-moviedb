@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-const FilmButton = ({ onSearchClick }) => (
-  <button
-    type="button"
-    className="film__button"
-    onClick={onSearchClick}
-  >
-    Search
-  </button>
-);
+export default class FilmButton extends Component {
+  static propTypes = {
+    onSearchClick: PropTypes.func.isRequired,
+  };
 
-FilmButton.propTypes = {
-  onSearchClick: PropTypes.func.isRequired,
-};
+  shouldComponentUpdate() {
+    return false; // onSearchClick should never change
+  }
 
-export default FilmButton;
+  render() {
+    const { onSearchClick } = this.props;
+
+    return (
+      <button
+        type="button"
+        className="film__button"
+        onClick={onSearchClick}
+      >
+        Search
+      </button>
+    );
+  }
+}

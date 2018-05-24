@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export default class SearchButton extends Component {
+export default class SearchButton extends PureComponent {
   static defaultProps = {
     type: 'button',
     size: 'small',

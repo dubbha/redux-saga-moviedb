@@ -3,6 +3,17 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 export default class SearchSortByLink extends Component {
+  static defaultProps = {
+    isActive: false,
+    onClickWithText: null,
+  };
+
+  static propTypes = {
+    text: PropTypes.string.isRequired,
+    isActive: PropTypes.bool,
+    onClickWithText: PropTypes.func,
+  };
+
   handleClick = () => {
     const { onClickWithText, text } = this.props;
 
@@ -32,14 +43,3 @@ export default class SearchSortByLink extends Component {
     );
   }
 }
-
-SearchSortByLink.defaultProps = {
-  isActive: false,
-  onClickWithText: null,
-};
-
-SearchSortByLink.propTypes = {
-  text: PropTypes.string.isRequired,
-  isActive: PropTypes.bool,
-  onClickWithText: PropTypes.func,
-};

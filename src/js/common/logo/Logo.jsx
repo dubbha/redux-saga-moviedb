@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './style.sass';
 
-const Logo = () => (
-  <div className="logo">
-    themoviedb
-  </div>
-);
+export default class Logo extends Component {
+  shouldComponentUpdate() {
+    return false; // no props to listen to
+  }
 
-export default Logo;
+  render() {
+    return (
+      <div className="logo">
+        themoviedb
+      </div>
+    );
+  }
+}

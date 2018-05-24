@@ -23,7 +23,7 @@ export const setQuery = query => ({
 
 export const setResults = (results, sortBy = defaultSortBy) => ({
   type: actionTypes.SET_RESULTS,
-  results: Array.isArray(results) ? results.sort(sortFnFabric(sortBy)) : [results],
+  results: Array.isArray(results) ? [...results.sort(sortFnFabric(sortBy))] : [results],
 });
 
 export const clearResults = () => ({
