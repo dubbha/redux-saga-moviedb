@@ -3,7 +3,8 @@
     "production": {
       "plugins": [
         "transform-class-properties",
-        "transform-object-rest-spread"
+        "transform-object-rest-spread",
+        "syntax-dynamic-import"
       ],
       "presets": [
         ["env", {
@@ -20,7 +21,8 @@
       "plugins": [
         "react-hot-loader/babel",
         "transform-class-properties",
-        "transform-object-rest-spread"
+        "transform-object-rest-spread",
+        "syntax-dynamic-import"
       ],
       "presets": [
         ["env", {
@@ -37,7 +39,8 @@
       ],
       "plugins": [
         "transform-class-properties",
-        "transform-object-rest-spread"
+        "transform-object-rest-spread",
+        "syntax-dynamic-import"
       ]
     }
   }

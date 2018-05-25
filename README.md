@@ -5,8 +5,9 @@
 - [x] SafeMode
 - [x] React v16.3 safe lifecycle hooks
 - [x] ErrorBoundaries
+- [x] Code Splitting, Lazy Loading
+- [ ] Context API
 - [ ] styled-components
-- [ ] Lazy Loading
 
 Run development server
 ```
