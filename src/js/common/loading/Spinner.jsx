@@ -1,9 +1,7 @@
 import React from 'react';
 
 const Spinner = () => (
-  <div className="list__message">
-    <div className="list__spinner" />
-  </div>
+  <div className="loading__spinner" />
 );
 
 export default Spinner;

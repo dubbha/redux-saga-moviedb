@@ -3,9 +3,9 @@ import Spinner from './Spinner';
 import './style.sass';
 
 const Loading = () => (
-  <section className="loading">
+  <div className="loading">
     <Spinner />
-  </section>
+  </div>
 );
 
 export default Loading;
