@@ -1,4 +1,5 @@
 import express from 'express';
+import Loadable from 'react-loadable';
 import handleRender from './handleRender';
 
 const app = express();
@@ -13,6 +14,6 @@ app.use(express.static('dist'));
 
 app.get('*', handleRender); // SPA default route
 
-app.listen(3000, () => {
+Loadable.preloadAll().then(() => app.listen(3000, () => {
   console.log('listening on *:3000'); // eslint-disable-line no-console
-});
+}));

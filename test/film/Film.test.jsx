@@ -311,7 +311,7 @@ describe('Film', () => {
     });
   });
 
-  describe('fetchData static method', () => {
+  xdescribe('fetchData static method', () => {
     it('should dispatch an action required for server-side rendering data pre-fetch', () => {
       const match = { params: { id: '1' } };
       const dispatch = jest.fn();

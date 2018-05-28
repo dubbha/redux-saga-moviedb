@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StrictMode } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SearchHeader from '../common/searchHeader';
@@ -37,16 +37,8 @@ export class Search extends Component {
     setIsError: PropTypes.func.isRequired,
   };
 
-  static fetchData = (dispatch, match) => {
-    if (match.params.query) {
-      const paramsQuery = decodeURIComponent(match.params.query);
-      dispatch(actions.setQuery(paramsQuery));
-      return dispatch(actions.searchByDirector());
-    }
-    return Promise.resolve();
-  }
-
-  componentDidMount() {
+  componentWillMount() { // still need componentWillMount this for SSR
+    console.log('Search componentWillMount');
     const {
       match: { params },
       query,
@@ -139,6 +131,7 @@ export class Search extends Component {
   }
 
   render() {
+    console.log('Search render', this.props);
     const {
       query,
       results,
@@ -151,29 +144,31 @@ export class Search extends Component {
     } = this.props;
 
     return (
-      <div className="app__container">
-        <SearchHeader
-          query={query}
-          onQueryChange={this.handleQueryChange}
-          onSearch={this.handleSearch}
-          searchBy={searchBy}
-          onSearchByChange={this.handleSearchByChange}
-          searchByParams={searchByParams}
-        />
-        <Result
-          results={results}
-          sortBy={sortBy}
-          onSortByChange={this.handleSortByChange}
-          sortByParams={sortByParams}
-        />
-        <List
-          results={results}
-          onSelectFilm={this.handleSelectFilm}
-          isLoading={isLoading}
-          isError={isError}
-        />
-        <Footer />
-      </div>
+      <StrictMode>
+        <div className="app__container">
+          <SearchHeader
+            query={query}
+            onQueryChange={this.handleQueryChange}
+            onSearch={this.handleSearch}
+            searchBy={searchBy}
+            onSearchByChange={this.handleSearchByChange}
+            searchByParams={searchByParams}
+          />
+          <Result
+            results={results}
+            sortBy={sortBy}
+            onSortByChange={this.handleSortByChange}
+            sortByParams={sortByParams}
+          />
+          <List
+            results={results}
+            onSelectFilm={this.handleSelectFilm}
+            isLoading={isLoading}
+            isError={isError}
+          />
+          <Footer />
+        </div>
+      </StrictMode>
     );
   }
 }

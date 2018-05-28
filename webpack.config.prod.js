@@ -34,14 +34,6 @@ module.exports = {
           'postcss-loader',
           'sass-loader',
         ],
-        // use: ExtractTextPlugin.extract({
-        //   fallback: 'style-loader',
-        //   use: [
-        //     { loader: 'css-loader', options: { sourceMap: true, minimize: true } },
-        //     { loader: 'postcss-loader', options: { sourceMap: true } },
-        //     { loader: 'sass-loader', options: { sourceMap: true } },
-        //   ],
-        // }),
       },
       ...sharedConfig.rules,
     ],

@@ -69,10 +69,13 @@ export const searchByTitle = () => ({
   type: actionTypes.SEARCH_BY_TITLE,
 });
 
-export const getFilm = id => ({
-  type: actionTypes.GET_FILM,
-  id,
-});
+export const getFilm = (id) => {
+  console.log('getFilm action');
+  return ({
+    type: actionTypes.GET_FILM,
+    id,
+  });
+};
 
 export const getFilmDetails = film => ({
   type: actionTypes.GET_FILM_DETAILS,

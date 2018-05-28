@@ -17,6 +17,7 @@ import {
 } from './selectors';
 
 export function* searchByDirectorSaga() {
+  console.log('searchByDirectorSaga');
   try {
     yield put(setIsLoading(true));
 
@@ -32,6 +33,7 @@ export function* searchByDirectorSaga() {
         },
       },
     );
+    console.log('searchByDirectorSaga res', res);
 
     if (res.data && res.data.results && res.data.results.length) {
       const res2 = yield call(
@@ -104,6 +106,7 @@ export function* searchByTitleSaga() {
 }
 
 export function* getFilmSaga(action) {
+  console.log('getFilmSaga');
   const { id } = action;
 
   try {
@@ -119,11 +122,14 @@ export function* getFilmSaga(action) {
         },
       },
     );
+    console.log('getFilmSaga res', res);
 
     yield put(setIsLoading(false)); // film is ready to be displayed without extra details
 
     if (res.data) {
+      console.log('res.data');
       const film = res.data;
+      yield put(setResults(film)); // intermediate, needed for SSR
 
       const { runtime } = res.data;
       const cast = (res.data.credits && res.data.credits.cast) || [];
@@ -136,11 +142,15 @@ export function* getFilmSaga(action) {
       if (directorObj && directorObj.name) {
         const director = directorObj.name;
 
+        console.log('multiQuery');
+
         yield put(setQuery(director));
         yield put(searchByDirector());
+        console.log('taking?');
         yield take(actionTypes.SET_RESULTS);
+        console.log('took?');
         yield put(setResultDetails(film.id, { runtime, cast, director }));
-
+        console.log('return');
         return;
       }
       // no director to search by, this film is the only film in the list
@@ -149,11 +159,14 @@ export function* getFilmSaga(action) {
         ? res.data.genres.map(i => i.id)
         : [];
 
+      console.log('setResults');
       yield put(setResults(film));
     } else {
+      console.log('clearResults');
       yield put(clearResults());
     }
   } catch (e) {
+    console.log('clearResults');
     yield put(clearResults());
   }
 }
@@ -198,6 +211,7 @@ export function* getFilmDetailsSaga(action) {
 }
 
 export function* watchSearchByDirector() {
+  console.log('watchSearchByDirector');
   yield takeLatest(actionTypes.SEARCH_BY_DIRECTOR, searchByDirectorSaga);
 }
 
@@ -206,6 +220,7 @@ export function* watchSearchByTitle() {
 }
 
 export function* watchGetFilm() {
+  console.log('watchGetFilm');
   yield takeLatest(actionTypes.GET_FILM, getFilmSaga);
 }
 
