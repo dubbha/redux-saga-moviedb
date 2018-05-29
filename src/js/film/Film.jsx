@@ -37,8 +37,11 @@ export class Film extends Component {
     isError: PropTypes.bool.isRequired,
   };
 
-  componentWillMount() { // still need componentWillMount this for SSR
-    console.log('Film componentWillMount');
+  constructor(props) {
+    super(props);
+
+    // SSR-ready replacement for the deprecated componentWillMount()
+    // while componentDidMount() is not fired on server
     const {
       match: { params },
       film,
@@ -46,22 +49,16 @@ export class Film extends Component {
       getFilm,
       getFilmDetails,
       searchByDirector,
-    } = this.props;
+    } = props;
 
     const id = +params.id;
-    console.log('id', id);
-    console.log('film', film);
     if (!film) {
-      console.log('!film, getFilm(id)');
       getFilm(id);
     } else {
-      console.log('else');
       if (!film.runtime || !film.cast || !film.director) {
-        console.log('getFilmDetails');
         getFilmDetails(film);
       }
       if (filteredResults && filteredResults.length === 0 && film.director) {
-        console.log('searchByDirector');
         searchByDirector(film.director);
       }
     }
@@ -99,7 +96,7 @@ export class Film extends Component {
 
     if (film.director) {
       setSearchBy('director');
-      history.push(`/search/${encodeURIComponent(film.director)}`);
+      history.push(`/search/director/${encodeURIComponent(film.director)}`);
     } else {
       history.push('/search');
     }
@@ -108,7 +105,6 @@ export class Film extends Component {
   render() {
     const { isLoading, isFilmLoading, isError, film, filteredResults } = this.props;
 
-    console.log('Film render()', this.props);
     return (
       <StrictMode>
         <div className="app__container">

@@ -4,27 +4,20 @@ exports[`app/App should render successfully 1`] = `
 <div
   className="app"
 >
-  <StrictMode>
-    <Switch>
-      <Switch>
-        <Route
-          key="0"
-          path="/search/:query?"
-          render={[Function]}
-        />
-        <Route
-          key="1"
-          path="/film/:id/:title?"
-          render={[Function]}
-        />
-        <Route
-          exact={true}
-          key="2"
-          path="/"
-          render={[Function]}
-        />
-      </Switch>
-    </Switch>
-  </StrictMode>
+  <Switch>
+    <Route
+      component={[Function]}
+      path="/search/:by?/:query?"
+    />
+    <Route
+      component={[Function]}
+      path="/film/:id/:title?"
+    />
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/"
+    />
+  </Switch>
 </div>
 `;

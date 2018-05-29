@@ -39,7 +39,6 @@ function handleRender(req, res) {
   );
 
   store.runSaga(rootSaga).done.then(() => {
-    console.log('done');
     const html = renderToString(app);
 
     if (context.url) { // <Redirect> was rendered
