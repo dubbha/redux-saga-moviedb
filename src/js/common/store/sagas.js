@@ -137,10 +137,13 @@ export function* getFilmSaga(action) {
         const director = directorObj.name;
 
         yield put(setQuery(director));
-        yield put(searchByDirector());
-        yield take(actionTypes.SET_RESULTS);
-        yield put(setResultDetails(film.id, { runtime, cast, director }));
 
+        // blocking direct call of saga
+        // must use instead of take, so that saga runs to an end on SSR
+        // https://github.com/redux-saga/redux-saga/issues/255#issuecomment-323747994
+        yield call(searchByDirectorSaga);
+
+        yield put(setResultDetails(film.id, { runtime, cast, director }));
         return;
       }
       // no director to search by, this film is the only film in the list

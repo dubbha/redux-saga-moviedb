@@ -329,7 +329,7 @@ describe('Search', () => {
     });
   });
 
-  describe('fetchData static method', () => {
+  xdescribe('fetchData static method', () => {
     let match;
     let dispatch;
 

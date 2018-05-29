@@ -39,7 +39,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_SEARCH_BY:
       return {
         ...state,
-        searchBy: action.searchBy,
+        searchBy: searchByParams.includes(action.searchBy) ? action.searchBy : defaultSearchBy,
       };
     case actionTypes.SET_SORT_BY:
       return {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StrictMode } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import FilmHeader from '../common/filmHeader';
@@ -37,10 +37,11 @@ export class Film extends Component {
     isError: PropTypes.bool.isRequired,
   };
 
-  static fetchData = (dispatch, match) =>
-    dispatch(actions.getFilm(match.params.id));
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
+    // SSR-ready replacement for the deprecated componentWillMount()
+    // while componentDidMount() is not fired on server
     const {
       match: { params },
       film,
@@ -48,10 +49,9 @@ export class Film extends Component {
       getFilm,
       getFilmDetails,
       searchByDirector,
-    } = this.props;
+    } = props;
 
     const id = +params.id;
-
     if (!film) {
       getFilm(id);
     } else {
@@ -96,7 +96,7 @@ export class Film extends Component {
 
     if (film.director) {
       setSearchBy('director');
-      history.push(`/search/${encodeURIComponent(film.director)}`);
+      history.push(`/search/director/${encodeURIComponent(film.director)}`);
     } else {
       history.push('/search');
     }
@@ -106,31 +106,33 @@ export class Film extends Component {
     const { isLoading, isFilmLoading, isError, film, filteredResults } = this.props;
 
     return (
-      <div className="app__container">
-        {
-          film && (
-            <FilmHeader
-              film={film}
-              onSearchClick={this.handleSearchClick}
-            />
-          )
-        }
-        {
-          film && !isFilmLoading && (
-            <Result
-              film={film}
-              results={filteredResults}
-            />
-          )
-        }
-        <List
-          results={filteredResults}
-          onSelectFilm={this.handleSelectFilm}
-          isLoading={isLoading || isFilmLoading}
-          isError={isError}
-        />
-        <Footer />
-      </div>
+      <StrictMode>
+        <div className="app__container">
+          {
+            film && (
+              <FilmHeader
+                film={film}
+                onSearchClick={this.handleSearchClick}
+              />
+            )
+          }
+          {
+            film && !isFilmLoading && (
+              <Result
+                film={film}
+                results={filteredResults}
+              />
+            )
+          }
+          <List
+            results={filteredResults}
+            onSelectFilm={this.handleSelectFilm}
+            isLoading={isLoading || isFilmLoading}
+            isError={isError}
+          />
+          <Footer />
+        </div>
+      </StrictMode>
     );
   }
 }

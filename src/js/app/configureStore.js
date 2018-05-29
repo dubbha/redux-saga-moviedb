@@ -1,5 +1,5 @@
 import { createStore, compose, applyMiddleware } from 'redux';
-import createSagaMiddleware from 'redux-saga';
+import createSagaMiddleware, { END } from 'redux-saga';
 import { devToolsEnhancer } from 'redux-devtools-extension/logOnlyInProduction';
 import rootReducer from './rootReducer';
 import rootSaga from '../common/store/sagas';
@@ -14,6 +14,10 @@ export default (initialState = {}) => {
       devToolsEnhancer(),
     ),
   );
+
+  store.runSaga = sagaMiddleware.run; // two methods needed for SSR
+  store.close = () => store.dispatch(END);
+
   sagaMiddleware.run(rootSaga);
   return store;
 };

@@ -33,10 +33,10 @@ const FilmHeader = ({ film, onSearchClick }) => (
             </div>
           </div>
           <div className="film__category">
-            {mapGenres(film.genre_ids)}
+            {film.genre_ids && mapGenres(film.genre_ids)}
           </div>
           <div className="film__year">
-            {parseYear(film.release_date)}
+            {film.release_date && parseYear(film.release_date)}
           </div>
           <div className="film__runtime">
             {film.runtime && `${film.runtime}  min`}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, StrictMode } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SearchHeader from '../common/searchHeader';
@@ -13,6 +13,7 @@ export class Search extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
+        by: PropTypes.string,
         query: PropTypes.string,
       }),
     }).isRequired,
@@ -37,16 +38,11 @@ export class Search extends Component {
     setIsError: PropTypes.func.isRequired,
   };
 
-  static fetchData = (dispatch, match) => {
-    if (match.params.query) {
-      const paramsQuery = decodeURIComponent(match.params.query);
-      dispatch(actions.setQuery(paramsQuery));
-      return dispatch(actions.searchByDirector());
-    }
-    return Promise.resolve();
-  }
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
+    // SSR-ready replacement for the deprecated componentWillMount()
+    // while componentDidMount() is not fired on server
     const {
       match: { params },
       query,
@@ -54,13 +50,18 @@ export class Search extends Component {
       searchByTitle,
       searchByDirector,
       setQuery,
-    } = this.props;
+      setSearchBy,
+    } = props;
 
     if (params.query) {
+      const paramsSearchBy = decodeURIComponent(params.by);
       const paramsQuery = decodeURIComponent(params.query);
-      if (paramsQuery !== query) {
+
+      if (paramsQuery !== query || paramsSearchBy !== searchBy) {
         setQuery(paramsQuery);
-        if (searchBy === 'director') {
+        setSearchBy(paramsSearchBy);
+
+        if (paramsSearchBy === 'director') {
           searchByDirector();
         } else {
           searchByTitle();
@@ -70,14 +71,18 @@ export class Search extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.query !== prevProps.match.params.query) {
-      const { searchBy, setQuery, clearResults, searchByDirector, searchByTitle } = this.props;
+    if (this.props.match.params.query !== prevProps.match.params.query
+        || this.props.match.params.by !== prevProps.match.params.by) {
+      const { setQuery, setSearchBy, clearResults, searchByDirector, searchByTitle } = this.props;
 
       if (this.props.match.params.query) {
         const nextPropsQuery = decodeURIComponent(this.props.match.params.query);
+        const nextPropsSearchBy = decodeURIComponent(this.props.match.params.by);
 
         setQuery(nextPropsQuery);
-        if (searchBy === 'director') {
+        setSearchBy(nextPropsSearchBy);
+
+        if (nextPropsSearchBy === 'director') {
           searchByDirector();
         } else {
           searchByTitle();
@@ -103,8 +108,8 @@ export class Search extends Component {
     e.preventDefault(); // submitting the form to support search on enter
     setIsError(false); // reset error if any
 
-    if (query) {
-      history.push(`/search/${encodeURIComponent(query)}`);
+    if (searchBy && query) {
+      history.push(`/search/${searchBy}/${encodeURIComponent(query)}`);
       if (searchBy === 'director') {
         searchByDirector();
       } else {
@@ -151,29 +156,31 @@ export class Search extends Component {
     } = this.props;
 
     return (
-      <div className="app__container">
-        <SearchHeader
-          query={query}
-          onQueryChange={this.handleQueryChange}
-          onSearch={this.handleSearch}
-          searchBy={searchBy}
-          onSearchByChange={this.handleSearchByChange}
-          searchByParams={searchByParams}
-        />
-        <Result
-          results={results}
-          sortBy={sortBy}
-          onSortByChange={this.handleSortByChange}
-          sortByParams={sortByParams}
-        />
-        <List
-          results={results}
-          onSelectFilm={this.handleSelectFilm}
-          isLoading={isLoading}
-          isError={isError}
-        />
-        <Footer />
-      </div>
+      <StrictMode>
+        <div className="app__container">
+          <SearchHeader
+            query={query}
+            onQueryChange={this.handleQueryChange}
+            onSearch={this.handleSearch}
+            searchBy={searchBy}
+            onSearchByChange={this.handleSearchByChange}
+            searchByParams={searchByParams}
+          />
+          <Result
+            results={results}
+            sortBy={sortBy}
+            onSortByChange={this.handleSortByChange}
+            sortByParams={sortByParams}
+          />
+          <List
+            results={results}
+            onSelectFilm={this.handleSelectFilm}
+            isLoading={isLoading}
+            isError={isError}
+          />
+          <Footer />
+        </div>
+      </StrictMode>
     );
   }
 }

@@ -2,10 +2,8 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { matchRoutes } from 'react-router-config';
-
-import routes from '../../src/js/app/routes';
 import configureStore from '../../src/js/app/configureStore';
+import rootSaga from '../../src/js/common/store/sagas';
 import App from '../../src/js/app/App';
 
 function renderFullPage(html, preloadedState) {
@@ -14,7 +12,7 @@ function renderFullPage(html, preloadedState) {
   <head lang="en">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>React Mentoring Program</title>
+    <title>Redux-Saga MovieDB SSR</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="shortcut icon" href="/favicon.ico">
   </head>
@@ -31,39 +29,32 @@ function renderFullPage(html, preloadedState) {
 
 function handleRender(req, res) {
   const store = configureStore();
+  const context = {};
+  const app = (
+    <Provider store={store}>
+      <StaticRouter location={req.url} context={context}>
+        <App />
+      </StaticRouter>
+    </Provider>
+  );
 
-  const branch = matchRoutes(routes, req.url);
-  const promises = branch.map(({ route, match }) => {
-    const { fetchData } = route.component;
+  store.runSaga(rootSaga).done.then(() => {
+    const html = renderToString(app);
 
-    if (!(fetchData instanceof Function)) {
-      return Promise.resolve(null);
+    if (context.url) { // <Redirect> was rendered
+      return res.redirect(context.url);
     }
 
-    return fetchData(store.dispatch, match);
+    const preloadedState = store.getState();
+
+    return res.send(renderFullPage(html, preloadedState));
   });
 
-  return Promise.all(promises)
-    .then(() => {
-      const context = {};
-      const app = (
-        <Provider store={store}>
-          <StaticRouter location={req.url} context={context}>
-            <App />
-          </StaticRouter>
-        </Provider>
-      );
+  // Do first render, starts initial actions.
+  renderToString(app);
 
-      const html = renderToString(app);
-
-      if (context.url) { // <Redirect> was rendered
-        return res.redirect(context.url);
-      }
-
-      const preloadedState = store.getState();
-
-      return res.send(renderFullPage(html, preloadedState));
-    });
+  // When the first render is finished, send the END action to redux-saga.
+  store.close();
 }
 
 export default handleRender;

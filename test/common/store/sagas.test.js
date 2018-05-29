@@ -279,11 +279,7 @@ describe('sagas', () => {
       });
 
       it('should search by director', () => {
-        expect(gen.next().value).toEqual(put(actions.searchByDirector()));
-      });
-
-      it('should wait for setResults action', () => {
-        expect(gen.next().value).toEqual(take(actions.actionTypes.SET_RESULTS));
+        expect(gen.next().value).toEqual(call(sut.searchByDirectorSaga));
       });
 
       it('should set retult details with runtime, cast and director', () => {
