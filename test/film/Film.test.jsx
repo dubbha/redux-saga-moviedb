@@ -4,6 +4,12 @@ import toJson from 'enzyme-to-json';
 import { connect } from 'react-redux';
 import { Film } from 'film/Film';
 
+jest.mock('react', () => {
+  const reactMock = require('React');
+  reactMock.StrictMode = function StrictMode() {}; // named shallow mock
+  return reactMock;
+});
+
 jest.mock('react-redux', () => ({
   connect: jest.fn(() => jest.fn()),
 }));
@@ -101,54 +107,40 @@ describe('Film', () => {
       expect(toJson(wrapper)).toMatchSnapshot();
     });
 
-    it('should get film if film is not available on mount', () => {
+    it('should get film if film is not available in constructor', () => {
       props.film = null;
       const instance = new Film(props);
-
-      instance.componentDidMount();
-
-      expect(props.getFilm).toBeCalled();
+      expect(instance.props.getFilm).toBeCalled();
     });
 
-    it('should get film details if runtime is not available on mount', () => {
+    it('should get film details if runtime is not available in constructor', () => {
       props.film.runtime = null;
       const instance = new Film(props);
-
-      instance.componentDidMount();
-
-      expect(props.getFilmDetails).toBeCalled();
+      expect(instance.props.getFilmDetails).toBeCalled();
     });
 
-    it('should get film details if cast runtime is not available on mount', () => {
+    it('should get film details if cast runtime is not available in constructor', () => {
       props.film.cast = null;
       const instance = new Film(props);
-
-      instance.componentDidMount();
-
-      expect(props.getFilmDetails).toBeCalled();
+      expect(instance.props.getFilmDetails).toBeCalled();
     });
 
-    it('should get film details if director is not available on mount', () => {
+    it('should get film details if director is not available in constructor', () => {
       props.film.director = null;
       const instance = new Film(props);
-
-      instance.componentDidMount();
-
-      expect(props.getFilmDetails).toBeCalled();
+      expect(instance.props.getFilmDetails).toBeCalled();
     });
 
-    it('should search by director if film director is available but results are empty on mount', () => {
+    it('should search by director if film director is available but results are empty in constructor', () => {
       props.film = { id: 1, title: 'TITLE', director: 'DIRECTOR' };
       props.filteredResults = [];
       const instance = new Film(props);
-
-      instance.componentDidMount();
-
-      expect(props.searchByDirector).toBeCalled();
+      expect(instance.props.searchByDirector).toBeCalled();
     });
 
     it('should get film if route id param changed but film is not available on props change', () => {
       const instance = new Film({
+        ...props,
         match: { params: { id: '2', title: 'TITLE2' } },
         film: null,
       });
@@ -160,6 +152,7 @@ describe('Film', () => {
 
     it('should get film details if route id param changed but film runtime is not available on props change', () => {
       const instance = new Film({
+        ...props,
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -179,6 +172,7 @@ describe('Film', () => {
 
     it('should get film details if route id param changed but film cast is not available on props change', () => {
       const instance = new Film({
+        ...props,
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -195,6 +189,7 @@ describe('Film', () => {
 
     it('should get film details if route id param changed but film director is not available on props change', () => {
       const instance = new Film({
+        ...props,
         match: { params: { id: '2', title: 'TITLE2' } },
         film: {
           id: 2,
@@ -214,9 +209,12 @@ describe('Film', () => {
 
     it('should not get film if route id param has not changed on props change', () => {
       const instance = new Film({
+        ...props,
         match: { params: { id: '1', title: 'TITLE' } },
         film: null,
       });
+
+      props.getFilm.mockReset();
 
       instance.componentDidUpdate(props);
 
@@ -225,12 +223,15 @@ describe('Film', () => {
 
     it('should not get film details if route id param has not changed on props change', () => {
       const instance = new Film({
+        ...props,
         match: { params: { id: '1', title: 'TITLE' } },
         film: {
           id: 1,
           title: 'TITLE',
         },
       });
+
+      props.getFilmDetails.mockReset();
 
       instance.componentDidUpdate(props);
 
@@ -298,7 +299,7 @@ describe('Film', () => {
 
       wrapper.find('FilmHeader').simulate('searchClick');
 
-      expect(props.history.push).toBeCalledWith('/search/DIRECTOR');
+      expect(props.history.push).toBeCalledWith('/search/director/DIRECTOR');
     });
 
     it('should push to route history if director is not available on handle search click', () => {
@@ -308,17 +309,6 @@ describe('Film', () => {
       wrapper.find('FilmHeader').simulate('searchClick');
 
       expect(props.history.push).toBeCalledWith('/search');
-    });
-  });
-
-  xdescribe('fetchData static method', () => {
-    it('should dispatch an action required for server-side rendering data pre-fetch', () => {
-      const match = { params: { id: '1' } };
-      const dispatch = jest.fn();
-
-      Film.fetchData(dispatch, match);
-
-      expect(dispatch).toBeCalledWith('film with id 1');
     });
   });
 });

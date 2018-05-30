@@ -85,6 +85,17 @@ describe('reducer', () => {
     expect(reducer(state, action)).toEqual({ searchBy: 'director' });
   });
 
+  it('should set a default searchBy parameter if passed one is not known', () => {
+    const state = { searchBy: 'title' };
+
+    const action = {
+      type: actionTypes.SET_SEARCH_BY,
+      searchBy: 'abracadabra',
+    };
+
+    expect(reducer(state, action)).toEqual({ searchBy: 'director' });
+  });
+
   it('should set sortBy parameter', () => {
     const state = { sortBy: 'release date' };
 
