@@ -4,10 +4,15 @@ import toJson from 'enzyme-to-json';
 import FilmButton from 'common/filmHeader/FilmButton';
 
 describe('FilmButton', () => {
-  it('should render successfully', () => {
-    const props = { onSearchClick: jest.fn() };
-    const wrapper = shallow(<FilmButton {...props} />);
+  const props = { onSearchClick: jest.fn() };
 
+  it('should render successfully', () => {
+    const wrapper = shallow(<FilmButton {...props} />);
     expect(toJson(wrapper)).toMatchSnapshot();
+  });
+
+  it('should never update', () => {
+    const instance = new FilmButton(props);
+    expect(instance.shouldComponentUpdate()).toBe(false);
   });
 });

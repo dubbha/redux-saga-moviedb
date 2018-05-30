@@ -4,6 +4,12 @@ import toJson from 'enzyme-to-json';
 import { connect } from 'react-redux';
 import { Search } from 'search/Search';
 
+jest.mock('react', () => {
+  const reactMock = require('React');
+  reactMock.StrictMode = function StrictMode() {}; // named shallow mock
+  return reactMock;
+});
+
 jest.mock('react-redux', () => ({
   connect: jest.fn(() => jest.fn()),
 }));
@@ -21,6 +27,7 @@ jest.mock('common/store/selectors', () => ({
 
 jest.mock('common/store/actions', () => ({
   setQuery: jest.fn(query => `setQuery action for ${query}`),
+  setSearchBy: jest.fn(searchBy => `setSearchBy action for ${searchBy}`),
   searchByDirector: jest.fn(() => 'searchByDirector action'),
 }));
 
@@ -74,15 +81,15 @@ describe('Search', () => {
     let props;
     beforeEach(() => {
       props = {
-        match: { params: { query: 'QUERY' } },
-        history: { push: jest.fn() },
+        match: { params: { by: 'director', query: 'QUERY' } },
+        searchBy: 'director',
         query: 'QUERY',
+        history: { push: jest.fn() },
         results: [
           { id: 1, title: 'TITLE1' },
           { id: 2, title: 'TITLE2' },
           { id: 3, title: 'TITLE3' },
         ],
-        searchBy: 'director',
         sortBy: 'rating',
         searchByParams: ['title', 'director'],
         sortByParams: ['release date', 'rating'],
@@ -104,52 +111,39 @@ describe('Search', () => {
       expect(toJson(wrapper)).toMatchSnapshot();
     });
 
-    it('should set query if params query differs from stored query on mount', () => {
+    it('should set query if params query differs from stored query in constructor', () => {
       props.query = '';
       const instance = new Search(props);
-
-      instance.componentDidMount();
-
-      expect(props.setQuery).toBeCalledWith('QUERY');
+      expect(instance.props.setQuery).toBeCalledWith('QUERY');
     });
 
-    it('should search by director if params query differs from stored query on mount', () => {
+    it('should search by director if params query differs from stored query in constructor', () => {
       props.query = '';
       const instance = new Search(props);
-
-      instance.componentDidMount();
-
-      expect(props.searchByDirector).toBeCalled();
+      expect(instance.props.searchByDirector).toBeCalled();
     });
 
-    it('should search by title if params query differs from stored query on mount', () => {
+    it('should search by title if params query differs from stored query in constructor', () => {
       props.query = '';
       props.searchBy = 'title';
-      const instance = new Search(props);
+      const instance = new Search({
+        ...props,
+        match: { params: { by: 'title', query: 'QUERY' } },
+      });
 
-      instance.componentDidMount();
-
-      expect(props.searchByTitle).toBeCalled();
+      expect(instance.props.searchByTitle).toBeCalled();
     });
 
-    it('should not set query if params query is empty on mount', () => {
+    it('should not set query if params query is empty in constructor', () => {
       props.match.params.query = '';
       const instance = new Search(props);
-
-      instance.componentDidMount();
-
-      expect(props.setQuery).not.toBeCalled();
+      expect(instance.props.setQuery).not.toBeCalled();
     });
 
     it('should set query if route query param changed on props change', () => {
       const instance = new Search({
-        match: { params: { query: 'NEW_QUERY' } },
-        searchBy: props.searchBy,
-        sortBy: props.sortBy,
-        setQuery: props.setQuery,
-        clearResults: props.clearResults,
-        searchByDirector: props.searchByDirector,
-        searchByTitle: props.searchByTitle,
+        ...props,
+        match: { params: { by: props.match.params.by, query: 'NEW_QUERY' } },
       });
 
       instance.componentDidUpdate(props);
@@ -159,13 +153,8 @@ describe('Search', () => {
 
     it('should search by director if route query param changed on props change', () => {
       const instance = new Search({
-        match: { params: { query: 'NEW_QUERY' } },
-        searchBy: props.searchBy,
-        sortBy: props.sortBy,
-        setQuery: props.setQuery,
-        clearResults: props.clearResults,
-        searchByDirector: props.searchByDirector,
-        searchByTitle: props.searchByTitle,
+        ...props,
+        match: { params: { by: props.match.params.by, query: 'NEW_QUERY' } },
       });
 
       instance.componentDidUpdate(props);
@@ -175,16 +164,16 @@ describe('Search', () => {
 
     it('should search by title if route query param changed on props change', () => {
       const instance = new Search({
-        match: { params: { query: 'NEW_QUERY' } },
+        ...props,
         searchBy: 'title',
-        sortBy: props.sortBy,
-        setQuery: props.setQuery,
-        clearResults: props.clearResults,
-        searchByDirector: props.searchByDirector,
-        searchByTitle: props.searchByTitle,
+        match: { params: { by: 'title', query: 'NEW_QUERY' } },
       });
 
-      instance.componentDidUpdate(props);
+      instance.componentDidUpdate({
+        ...props,
+        searchBy: 'title',
+        match: { params: { by: 'title', query: 'QUERY' } },
+      });
 
       expect(props.searchByTitle).toBeCalled();
     });
@@ -207,13 +196,8 @@ describe('Search', () => {
 
     it('should clear results if query changed to empty string on props change', () => {
       const instance = new Search({
-        match: { params: { query: '' } },
-        searchBy: props.searchBy,
-        sortBy: props.sortBy,
-        setQuery: props.setQuery,
-        clearResults: props.clearResults,
-        searchByDirector: props.searchByDirector,
-        searchByTitle: props.searchByTitle,
+        ...props,
+        match: { params: { by: props.searchBy, query: '' } },
       });
 
       instance.componentDidUpdate(props);
@@ -222,15 +206,7 @@ describe('Search', () => {
     });
 
     it('should not set query if query has not changed on props change', () => {
-      const instance = new Search({
-        match: { params: { query: 'QUERY' } },
-        searchBy: props.searchBy,
-        sortBy: props.sortBy,
-        setQuery: props.setQuery,
-        clearResults: props.clearResults,
-        searchByDirector: props.searchByDirector,
-        searchByTitle: props.searchByTitle,
-      });
+      const instance = new Search(props);
 
       instance.componentDidUpdate(props);
 
@@ -242,7 +218,7 @@ describe('Search', () => {
 
       wrapper.find('SearchHeader').simulate('search', event);
 
-      expect(props.history.push).toBeCalledWith('/search/QUERY');
+      expect(props.history.push).toBeCalledWith('/search/director/QUERY');
     });
 
     it('should search by director on handle search', () => {
@@ -326,39 +302,6 @@ describe('Search', () => {
       wrapper.find('Result').simulate('sortByChange', 'NEW_SORT_BY');
 
       expect(props.setResults).toBeCalledWith(props.results, 'NEW_SORT_BY');
-    });
-  });
-
-  xdescribe('fetchData static method', () => {
-    let match;
-    let dispatch;
-
-    beforeEach(() => {
-      match = { params: { query: 'QUERY' } };
-      dispatch = jest.fn();
-    });
-
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should set query on server-side rendering', () => {
-      Search.fetchData(dispatch, match);
-
-      expect(dispatch).toBeCalledWith('setQuery action for QUERY');
-    });
-
-    it('should search by director on server-side rendering', () => {
-      Search.fetchData(dispatch, match);
-
-      expect(dispatch).toBeCalledWith('searchByDirector action');
-    });
-
-    it('should not dispatch if query is empty on server-side rendering', () => {
-      match.params.query = '';
-      Search.fetchData(dispatch, match);
-
-      expect(dispatch).not.toBeCalled();
     });
   });
 });

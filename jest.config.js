@@ -3,6 +3,11 @@ module.exports = {
   roots: ['test'],
   moduleFileExtensions: ['js', 'jsx'],
   collectCoverageFrom: ['src/js/**/*.{js,jsx}'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/src/js/.*/index.js$',
+    '<rootDir>/src/js/app/loadable.js',
+  ],
   setupFiles: [
     'raf/polyfill',
     '<rootDir>/enzyme.config.js',
